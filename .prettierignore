@@ -1,0 +1,10 @@
+dist
+.angular
+coverage
+.lighthouseci
+node_modules
+package-lock.json
+public/sitemap.xml
+deploy/nginx
+deploy/cron
+deploy/bin

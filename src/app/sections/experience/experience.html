@@ -1,0 +1,62 @@
+@let e = content().experience;
+
+<div class="container">
+  <p class="section-head">
+    <span class="section-head__index">{{ e.index }}</span
+    >{{ e.label }}
+  </p>
+  <h2 class="experience__title mono">{{ e.title }}</h2>
+
+  <ol class="jobs">
+    @for (row of rows(); track row.job.id) {
+      <li class="job" [class.job--current]="!row.job.end" [style.--lane]="row.job.lane" data-job>
+        <div class="job__graph" aria-hidden="true">
+          <span class="lane lane--0" [class]="'lane--' + row.lane0"></span>
+          @if (row.lane1 !== 'none') {
+            <span class="lane lane--1" [class]="'lane--' + row.lane1"></span>
+            @if (row.lane1 === 'fork') {
+              <span class="lane lane--1 lane--fork-down"></span>
+              <span class="fork-curve"></span>
+            }
+          }
+          <span class="job__dot"></span>
+        </div>
+
+        <div class="job__meta mono" data-reveal>
+          <span class="job__hash">
+            {{ row.hash }}
+            @if (row.head) {
+              <span class="job__head">{{ row.head }}</span>
+            }
+          </span>
+          <span class="job__range">{{ row.range }}</span>
+          <span class="job__duration">{{ row.duration }}</span>
+        </div>
+
+        <div class="job__body" data-reveal>
+          <h3 class="job__company display">{{ row.job.company }}</h3>
+          <p class="job__role">{{ row.job.role }}</p>
+          <p class="job__summary">{{ row.job.summary }}</p>
+          @if (row.job.points.length) {
+            <ul class="job__points">
+              @for (point of row.job.points; track $index) {
+                <li>{{ point }}</li>
+              }
+            </ul>
+          }
+          <p class="sr-only">{{ e.stackLabel }}:</p>
+          <ul class="job__stack">
+            @for (tech of row.job.stack; track tech) {
+              <li class="chip">{{ tech }}</li>
+            }
+          </ul>
+        </div>
+      </li>
+    }
+  </ol>
+
+  <p class="education" data-reveal>
+    <span class="education__label mono">{{ e.education.label }}</span>
+    <span>{{ e.education.text }}</span>
+  </p>
+</div>

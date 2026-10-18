@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <title>Иван Дамаскин — Fullstack-разработчик</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0a0c" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="author" content="Ivan Damaskin" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <script>
+      // Motion is on unless the visitor asked for less. If the animation code never starts
+      // (blocked script, old browser), the watchdog shows everything after 3.5 s.
+      (function (d, w) {
+        if (w.matchMedia && w.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        d.documentElement.classList.add('motion');
+        setTimeout(function () {
+          if (!w.__ddMotion) d.documentElement.classList.remove('motion');
+        }, 3500);
+      })(document, window);
+    </script>
+  </head>
+  <body>
+    <dd-root></dd-root>
+  </body>
+</html>

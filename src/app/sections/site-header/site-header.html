@@ -1,0 +1,70 @@
+@let c = content();
+
+<a class="skip-link" href="#main">{{ c.a11y.skip }}</a>
+
+<div class="site-header__bg" aria-hidden="true"></div>
+
+<div class="site-header__bar container">
+  <a class="site-header__logo" [href]="homeHref()" data-cursor>
+    <span class="site-header__mark" aria-hidden="true">ID</span>
+    <span class="site-header__domain mono">damaskin<span class="accent">.dev</span></span>
+  </a>
+
+  <nav class="site-header__nav" [attr.aria-label]="c.a11y.nav">
+    <ul>
+      @for (item of c.nav; track item.href) {
+        <li>
+          <a [href]="item.href" (click)="go($event, item.href)">{{ item.label }}</a>
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <div class="site-header__tools">
+    <a
+      class="site-header__lang mono"
+      [href]="otherLangHref()"
+      [attr.hreflang]="c.lang === 'ru' ? 'en' : 'ru'"
+      [attr.aria-label]="c.a11y.langSwitch"
+      >{{ otherLangLabel() }}</a
+    >
+    <a class="site-header__cv mono" [href]="c.cvHref" download="Ivan_Damaskin_CV.pdf">
+      {{ c.cvLabel }}
+      <svg viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M8 2v9M4 7l4 4 4-4M3 14h10" fill="none" stroke="currentColor" stroke-width="1.6" />
+      </svg>
+    </a>
+    <button
+      class="site-header__burger"
+      type="button"
+      [attr.aria-expanded]="menuOpen()"
+      aria-controls="mobile-menu"
+      (click)="toggleMenu()"
+    >
+      <span class="sr-only">{{ c.a11y.menu }}</span>
+      <span class="site-header__burger-line" aria-hidden="true"></span>
+      <span class="site-header__burger-line" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <div class="site-header__progress" aria-hidden="true"></div>
+</div>
+
+<div class="mobile-menu" id="mobile-menu" [attr.inert]="menuOpen() ? null : ''">
+  <nav [attr.aria-label]="c.a11y.nav">
+    <ul class="mobile-menu__list">
+      @for (item of c.nav; track item.href; let i = $index) {
+        <li [style.--i]="i">
+          <a class="display" [href]="item.href" (click)="go($event, item.href)">
+            <span class="mobile-menu__idx mono">0{{ i + 2 }}</span
+            >{{ item.label }}
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+  <div class="mobile-menu__foot mono">
+    <a [href]="'mailto:' + c.contact.email">{{ c.contact.email }}</a>
+    <a [href]="c.cvHref" download="Ivan_Damaskin_CV.pdf">{{ c.cvLabel }}</a>
+  </div>
+</div>

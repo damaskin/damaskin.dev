@@ -1,0 +1,336 @@
+@use 'styles/fonts';
+
+:root {
+  color-scheme: dark;
+
+  --bg: #0a0a0c;
+  --bg-2: #101015;
+  --surface: #15151b;
+  --surface-2: #1c1c24;
+  --line: rgb(236 235 230 / 0.1);
+  --line-strong: rgb(236 235 230 / 0.22);
+  --fg: #ecebe6;
+  --fg-muted: #a3a3ac;
+  --fg-dim: #84848e;
+  --accent: #ff5a36;
+  --accent-soft: rgb(255 90 54 / 0.14);
+  --accent-2: #ffb36b;
+  --on-accent: #0a0a0c;
+
+  --font-display: 'Unbounded Variable', 'Arial Black', system-ui, sans-serif;
+  --font-body: 'Onest Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+
+  --gutter: clamp(16px, 4vw, 56px);
+  --maxw: 1440px;
+  --header-h: 72px;
+  --radius: 18px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 100%;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: var(--header-h);
+}
+
+html:not(.lenis) {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  overflow-x: clip;
+}
+
+// Lenis
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+img,
+svg,
+canvas,
+picture {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+dl,
+dd,
+figure {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1000;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+  transform: translateY(-200%);
+  transition: transform 0.2s;
+
+  &:focus-visible {
+    transform: none;
+  }
+}
+
+// Film grain over everything: one SVG noise tile, nudged with steps() so it costs nothing.
+body::after {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  z-index: 900;
+  pointer-events: none;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 1.2s steps(6) infinite;
+
+  @media (pointer: coarse) {
+    animation: none;
+  }
+}
+
+@keyframes grain {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-3%, 2%);
+  }
+  40% {
+    transform: translate(2%, -4%);
+  }
+  60% {
+    transform: translate(-4%, -1%);
+  }
+  80% {
+    transform: translate(3%, 3%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+// ---------- Shared building blocks (used by several sections) ----------
+
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  position: relative;
+  padding-block: clamp(96px, 13vw, 200px);
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: clamp(28px, 4vw, 56px);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+
+  .section-head__index {
+    color: var(--accent);
+  }
+
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    align-self: center;
+    background: var(--line);
+  }
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.h2 {
+  font-size: clamp(2.25rem, 6.2vw, 6rem);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: var(--fg-muted);
+  white-space: nowrap;
+  transition:
+    color 0.25s,
+    border-color 0.25s,
+    background-color 0.25s;
+}
+
+.btn {
+  --btn-bg: transparent;
+  --btn-fg: var(--fg);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 26px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    color 0.35s var(--ease-out),
+    border-color 0.35s var(--ease-out);
+
+  // Fill that rises from the bottom on hover
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--accent);
+    transform: translateY(101%);
+    transition: transform 0.45s var(--ease-out);
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--on-accent);
+    border-color: var(--accent);
+
+    &::before {
+      transform: none;
+    }
+  }
+
+  &--primary {
+    --btn-bg: var(--accent);
+    --btn-fg: var(--on-accent);
+    border-color: var(--accent);
+
+    &::before {
+      background: var(--fg);
+    }
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    flex: none;
+  }
+}
+
+// Elements that animate in are hidden only when JS motion is on (html.motion is set inline in index.html).
+// A watchdog removes the class if GSAP never starts, so content never stays invisible.
+html.motion [data-reveal] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

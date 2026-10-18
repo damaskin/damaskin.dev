@@ -1,0 +1,112 @@
+name: CI / Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# A new push to a PR cancels its previous run; runs on main queue up and are never cut in half.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Lint · test · build · Lighthouse
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Formatting
+        run: npm run format:check
+
+      - name: Unit tests
+        run: npm run test:ci
+
+      - name: Build (static prerender, RU + EN)
+        run: npx ng build --define "BUILD_SHA='${GITHUB_SHA::7}'"
+
+      - name: Check build output
+        run: npm run check:dist
+
+      - name: Lighthouse
+        run: npx --yes @lhci/cli@0.15.1 autorun
+
+      - name: Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse
+          path: .lighthouseci
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Site artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: site
+          path: dist/damaskin-dev/browser
+          retention-days: 7
+
+  deploy:
+    name: Deploy to damaskin.dev
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: production
+      url: https://damaskin.dev
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: site
+          path: site
+
+      # The key is bound on the server to bin/ci-deploy (command= in authorized_keys):
+      # it can only upload a release of static files, nothing else.
+      - name: Upload release
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          tar -czf - -C site . | ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+            "root@$DEPLOY_HOST" "deploy ${GITHUB_SHA::7}"
+
+      - name: Smoke test through the server
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          # Straight to the server by IP, so it works whatever DNS / CDN is in front.
+          # -k: until Let's Encrypt is issued the certificate is a temporary self-signed one.
+          page="$(curl -fsSk --retry 5 --retry-delay 3 --resolve "damaskin.dev:443:$DEPLOY_HOST" https://damaskin.dev/)"
+          grep -q "${GITHUB_SHA::7}" <<<"$page" || { echo "the live page is not build ${GITHUB_SHA::7}"; exit 1; }
+          curl -fsSk --resolve "damaskin.dev:443:$DEPLOY_HOST" -o /dev/null https://damaskin.dev/en
+          echo "build ${GITHUB_SHA::7} is live"
+
+      - name: Public check (DNS + TLS)
+        continue-on-error: true
+        run: curl -fsS --max-time 20 -o /dev/null -w "https://damaskin.dev/ -> %{http_code}\n" https://damaskin.dev/

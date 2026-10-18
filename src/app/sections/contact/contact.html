@@ -1,0 +1,74 @@
+@let c = content();
+@let k = c.contact;
+
+<div class="container">
+  <p class="section-head">
+    <span class="section-head__index">{{ k.index }}</span
+    >{{ k.label }}
+  </p>
+
+  <h2 class="contact__title display" data-title>{{ k.title }}</h2>
+  <p class="contact__text" data-reveal>{{ k.text }}</p>
+
+  <div class="contact__mail" data-reveal>
+    <a class="contact__email display" [href]="'mailto:' + k.email" ddMagnetic="0.15" data-cursor>
+      {{ k.email }}
+      <span class="contact__email-line" aria-hidden="true"></span>
+    </a>
+    <button
+      class="contact__copy mono"
+      type="button"
+      (click)="copyEmail()"
+      [attr.aria-label]="c.a11y.copy"
+    >
+      @if (copied()) {
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path d="m3 8 3 3 7-7" fill="none" stroke="currentColor" stroke-width="1.8" />
+        </svg>
+      } @else {
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <rect
+            x="5"
+            y="5"
+            width="9"
+            height="9"
+            rx="2"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
+          <path d="M11 3H4a1 1 0 0 0-1 1v7" fill="none" stroke="currentColor" stroke-width="1.5" />
+        </svg>
+      }
+    </button>
+    <span class="contact__toast mono" role="status">{{ copied() ? c.a11y.copied : '' }}</span>
+  </div>
+
+  <ul class="contact__links" data-reveal>
+    @for (link of k.links; track link.href) {
+      <li>
+        @if (link.href.startsWith('http')) {
+          <a class="btn" [href]="link.href" target="_blank" rel="noopener me" ddMagnetic>
+            {{ link.label }}
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M5 11 11 5M6 5h5v5" fill="none" stroke="currentColor" stroke-width="1.6" />
+            </svg>
+            <span class="sr-only">({{ c.a11y.opensInNewTab }})</span>
+          </a>
+        } @else {
+          <a class="btn btn--primary" [href]="link.href" download="Ivan_Damaskin_CV.pdf" ddMagnetic>
+            {{ link.label }}
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path
+                d="M8 2v9M4 7l4 4 4-4M3 14h10"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+            </svg>
+          </a>
+        }
+      </li>
+    }
+  </ul>
+</div>

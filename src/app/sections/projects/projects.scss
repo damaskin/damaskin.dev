@@ -1,0 +1,487 @@
+:host {
+  display: block;
+  overflow: clip;
+}
+
+:host(.is-horizontal) {
+  padding-block: 0;
+
+  .projects__pin {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100svh;
+    padding-top: calc(var(--header-h) + 8px);
+    padding-bottom: 32px;
+  }
+
+  .projects__intro .section-head {
+    margin-bottom: 16px;
+  }
+
+  .projects__title {
+    font-size: clamp(2rem, 3.6vw, 3.75rem);
+  }
+
+  .projects__track {
+    flex-direction: row;
+    width: max-content;
+    padding-inline: var(--gutter) 12vw;
+  }
+
+  .project {
+    width: min(1180px, 82vw);
+    height: min(600px, calc(100svh - var(--header-h) - 230px));
+  }
+
+  .project--clients {
+    width: min(620px, 50vw);
+  }
+
+  .project__card {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    height: 100%;
+  }
+
+  .projects__hint {
+    display: inline-flex;
+  }
+
+  // Short laptop screens: keep the card readable without inner scrolling
+  @media (max-height: 820px) {
+    .project__stack {
+      display: none;
+    }
+
+    .project__desc {
+      font-size: 0.9375rem;
+    }
+  }
+}
+
+.projects__heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.projects__hint {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  white-space: nowrap;
+
+  svg {
+    width: 24px;
+    animation: nudge 1.8s var(--ease-out) infinite;
+  }
+}
+
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(8px);
+  }
+}
+
+.projects__viewport {
+  margin-top: clamp(28px, 4vw, 48px);
+}
+
+.projects__track {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 2.4vw, 36px);
+  padding-inline: var(--gutter);
+  will-change: transform;
+}
+
+// ---------- Card ----------
+
+.project {
+  flex: none;
+}
+
+.project__card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(20px, 3vw, 44px);
+  padding: clamp(14px, 1.6vw, 22px);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: linear-gradient(160deg, var(--surface) 0%, var(--bg-2) 60%);
+}
+
+.project__visual {
+  position: relative;
+  min-height: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #050506;
+}
+
+// Browser window around a screenshot
+.frame {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  cursor: pointer;
+}
+
+.frame__bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  background: #111116;
+}
+
+.frame__dots {
+  display: flex;
+  gap: 6px;
+
+  i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #2a2a33;
+  }
+}
+
+.frame__url {
+  flex: 1;
+  max-width: 280px;
+  margin-inline: auto;
+  padding: 4px 12px;
+  border-radius: 8px;
+  background: #1b1b22;
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+.frame__screen {
+  position: relative;
+  display: block;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+
+  :host(.is-horizontal) & {
+    aspect-ratio: auto;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform 1.2s var(--ease-out);
+  }
+
+  .frame:hover & img {
+    transform: scale(1.03);
+  }
+}
+
+.project__media {
+  display: block;
+  height: 100%;
+}
+
+// Phone next to the browser window (FitHorse)
+.phone {
+  position: absolute;
+  right: 5%;
+  bottom: -14%;
+  width: clamp(110px, 24%, 210px);
+  aspect-ratio: 390 / 844;
+  padding: 6px;
+  border-radius: 28px;
+  background: #050506;
+  border: 1px solid var(--line-strong);
+  box-shadow:
+    0 30px 60px rgb(0 0 0 / 0.6),
+    0 0 0 6px rgb(236 235 230 / 0.03);
+  transform: rotate(4deg);
+  pointer-events: none;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 22px;
+  }
+}
+
+// "Svyaz" widget mock-up
+.widget {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  height: 100%;
+  min-height: 360px;
+  padding: clamp(20px, 3vw, 40px);
+  background: radial-gradient(80% 60% at 80% 0%, rgb(255 90 54 / 0.18), transparent 70%), #0c0c10;
+}
+
+.widget__top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.875rem;
+}
+
+.widget__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 16px;
+
+  i {
+    width: 4px;
+    border-radius: 2px;
+    background: var(--accent);
+    animation: bars 1.6s ease-in-out infinite;
+
+    &:nth-child(1) {
+      height: 30%;
+      animation-delay: 0s;
+    }
+    &:nth-child(2) {
+      height: 55%;
+      animation-delay: 0.15s;
+    }
+    &:nth-child(3) {
+      height: 80%;
+      animation-delay: 0.3s;
+    }
+    &:nth-child(4) {
+      height: 100%;
+      animation-delay: 0.45s;
+    }
+  }
+}
+
+@keyframes bars {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.widget__chip {
+  margin-left: auto;
+  padding: 3px 10px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  color: var(--accent);
+}
+
+.widget__steps {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  gap: 10px;
+
+  // the rail with a pulse running down it
+  &::before {
+    content: '';
+    position: absolute;
+    left: 9px;
+    top: 12px;
+    bottom: 12px;
+    width: 2px;
+    background:
+      linear-gradient(var(--accent), var(--accent-2)) 0 0 / 2px 30% no-repeat,
+      var(--line-strong);
+    animation: rail 3s linear infinite;
+  }
+}
+
+@keyframes rail {
+  from {
+    background-position: 0 -40%;
+  }
+  to {
+    background-position: 0 140%;
+  }
+}
+
+.widget__step {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 10px 14px 10px 0;
+  border-radius: 12px;
+}
+
+.widget__node {
+  position: relative;
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  flex: none;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  background: #0c0c10;
+  animation: node 3s linear infinite;
+  animation-delay: calc(var(--s) * 0.5s);
+}
+
+@keyframes node {
+  0%,
+  12% {
+    background: var(--accent);
+    box-shadow: 0 0 0 6px var(--accent-soft);
+  }
+  30%,
+  100% {
+    background: #0c0c10;
+    box-shadow: none;
+  }
+}
+
+.widget__label {
+  font-size: clamp(1rem, 1.3vw, 1.25rem);
+  font-weight: 500;
+}
+
+.widget__status {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+}
+
+.widget__cta {
+  align-self: stretch;
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+// ---------- Text column ----------
+
+.project__info {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: clamp(4px, 1vw, 16px) clamp(4px, 1.4vw, 20px) clamp(8px, 1.4vw, 20px) 0;
+  overflow: hidden;
+
+  @media (max-width: 1023px) {
+    padding: 4px 6px 10px;
+  }
+}
+
+.project__num {
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+}
+
+.project__kind {
+  font-size: 0.8125rem;
+  color: var(--accent);
+}
+
+.project__name {
+  font-size: clamp(2rem, 4vw, 3.75rem);
+  line-height: 1;
+}
+
+.project__desc {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--fg-muted);
+}
+
+.project__highlights {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 16px;
+  font-size: 0.9375rem;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+
+  li {
+    position: relative;
+    padding-left: 20px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.45em;
+      width: 9px;
+      height: 5px;
+      border: solid var(--accent);
+      border-width: 0 0 2px 2px;
+      transform: rotate(-45deg);
+    }
+  }
+}
+
+.project__stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.project__link {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+// ---------- GLOBUS clients ----------
+
+.clients {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  height: 100%;
+  padding: clamp(24px, 3vw, 40px);
+  border: 1px dashed var(--line-strong);
+  border-radius: 28px;
+}
+
+.clients__label {
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.clients__list {
+  display: grid;
+  gap: 18px;
+
+  li {
+    font-size: clamp(1.125rem, 1.8vw, 1.75rem);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+}

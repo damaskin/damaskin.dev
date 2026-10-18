@@ -1,0 +1,39 @@
+# damaskin.dev on the shared Hetzner host (Raynor), same scheme as rayndev / vanglera:
+#
+#   edge-nginx (:80/:443, SNI passthrough)
+#     --SNI damaskin.dev / www.damaskin.dev--> damaskin-nginx:443 (terminates TLS, serves the static build)
+#
+# No published ports — :80/:443 belong to edge. The container lives only in the edge-public network.
+# Server layout:
+#   /opt/damaskin-dev/deploy       — this folder (uploaded by scripts/deploy-infra.mjs)
+#   /opt/damaskin-dev/site         — releases/<id>/ and the `current` symlink (written by bin/ci-deploy)
+#   /opt/damaskin-dev/letsencrypt  — bootstrap/ (self-signed), live/ (Let's Encrypt), active -> one of them
+#   /opt/damaskin-dev/bin/ci-deploy — forced command of the GitHub Actions deploy key
+
+name: damaskin-dev
+
+services:
+  damaskin-nginx:
+    image: nginx:1.27-alpine
+    container_name: damaskin-nginx
+    restart: unless-stopped
+    volumes:
+      # Directories only, never single files: a file replaced by a new inode would stay stale in the container.
+      # `current` and `active` are relative symlinks inside the mounted dirs, so switching a release or a
+      # certificate is visible without recreating the container.
+      - ./nginx:/etc/nginx/conf.d:ro
+      - /opt/damaskin-dev/site:/srv/site:ro
+      - /opt/damaskin-dev/letsencrypt:/etc/letsencrypt:ro
+      # Shared ACME webroot (edge serves it on :80); mounted here too for challenges redirected to https.
+      - /opt/rayn-repo/infra/deploy/certbot/www:/var/www/acme:ro
+    networks: [edge-public]
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', '--no-check-certificate', 'https://127.0.0.1/health']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+networks:
+  edge-public:
+    external: true

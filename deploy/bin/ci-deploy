@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+#
+# Entry point of the GitHub Actions deploy key. Installed to /opt/damaskin-dev/bin/ci-deploy (scripts/deploy.sh)
+# and bound to that key with command="…" in /root/.ssh/authorized_keys — the key can do nothing but this.
+# The requested action comes in SSH_ORIGINAL_COMMAND:
+#
+#   tar -czf - -C dist/damaskin-dev/browser . | ssh root@host "deploy <sha>"   # new release from stdin
+#   ssh root@host "rollback <release-id>"                                       # switch back to a kept release
+#   ssh root@host "releases"                                                    # list kept releases
+#
+# A release is static files only: the archive is unpacked into a temp dir, rejected if it has links or special
+# files or lacks the expected pages, then moved into releases/ and `current` is switched atomically.
+# nginx follows the symlink per request, so no reload is needed. The last 5 releases are kept.
+set -euo pipefail
+
+ROOT=/opt/damaskin-dev
+SITE="$ROOT/site"
+KEEP=5
+MAX_BYTES=$((80 * 1024 * 1024))
+
+read -r action arg rest <<<"${SSH_ORIGINAL_COMMAND:-}" || true
+[ -z "${rest:-}" ] || { echo "unexpected arguments" >&2; exit 2; }
+
+exec 9>/var/lock/damaskin-dev-deploy.lock
+flock -w 300 9 || { echo "another deploy has been running for 5 minutes" >&2; exit 1; }
+mkdir -p "$SITE/releases"
+
+switch_to() {
+  ln -sfn "releases/$1" "$SITE/current.next"
+  mv -Tf "$SITE/current.next" "$SITE/current"
+}
+
+case "${action:-}" in
+  deploy)
+    [[ "${arg:-}" =~ ^[0-9a-f]{7,40}$ ]] || { echo "usage: deploy <commit sha>" >&2; exit 2; }
+    id="$(date -u +%Y%m%d-%H%M%S)-${arg:0:7}"
+    tmp="$(mktemp -d "$SITE/.incoming.XXXXXX")"
+    trap 'rm -rf "$tmp"' EXIT
+
+    head -c "$MAX_BYTES" | tar -xz -C "$tmp" --no-same-owner --no-same-permissions
+    if [ -n "$(find "$tmp" ! -type f ! -type d -print -quit)" ]; then
+      echo "rejected: the archive contains links or special files" >&2
+      exit 1
+    fi
+    for page in index.html en/index.html 404.html; do
+      [ -f "$tmp/$page" ] || { echo "rejected: no $page in the archive" >&2; exit 1; }
+    done
+    grep -q 'https://damaskin.dev/' "$tmp/index.html" || { echo "rejected: index.html is not damaskin.dev" >&2; exit 1; }
+
+    chmod -R u=rwX,go=rX "$tmp"
+    mv "$tmp" "$SITE/releases/$id"
+    trap - EXIT
+    switch_to "$id"
+    ls -1dt "$SITE"/releases/*/ | tail -n +$((KEEP + 1)) | xargs -r rm -rf
+    echo "released $id"
+    ;;
+  rollback)
+    [[ "${arg:-}" =~ ^[0-9]{8}-[0-9]{6}-[0-9a-f]{7}$ ]] && [ -d "$SITE/releases/$arg" ] \
+      || { echo "no such release: ${arg:-}" >&2; exit 2; }
+    switch_to "$arg"
+    echo "rolled back to $arg"
+    ;;
+  releases)
+    current="$(readlink "$SITE/current" 2>/dev/null || true)"
+    for dir in $(ls -1t "$SITE/releases"); do
+      [ "releases/$dir" = "$current" ] && echo "$dir  <- current" || echo "$dir"
+    done
+    ;;
+  *)
+    echo "usage: deploy <sha> | rollback <release-id> | releases" >&2
+    exit 2
+    ;;
+esac

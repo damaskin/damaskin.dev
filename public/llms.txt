@@ -1,0 +1,35 @@
+# Ivan Damaskin — Fullstack Developer (Angular / Node.js)
+
+> Fullstack developer with 11+ years of commercial web development. Main stack: Angular 20–22, TypeScript, RxJS,
+> Node.js / NestJS, PostgreSQL, Redis; mobile apps in Flutter and React Native. Practises AI-assisted development:
+> Claude Code agents, MCP integrations, LLM APIs. Moscow, remote, open to business trips. Open to offers.
+
+- Website (RU): https://damaskin.dev/
+- Website (EN): https://damaskin.dev/en
+- CV (PDF, RU): https://damaskin.dev/cv/Ivan_Damaskin_CV.pdf
+- Email: damaskin@live.ru
+- GitHub: https://github.com/damaskin
+- hh.ru: https://hh.ru/resume/7106d07eff020e80d60039ed1f684d71313168
+
+## Experience
+
+- INSAPP — Frontend Developer, Dec 2021 – now. Insurtech platform: frontend of 8 products (motor insurance OSAGO/KASKO,
+  mortgage insurance, microloans showcase, cashback subscriptions in the Alfa-Bank webview, events, staff workstation,
+  corporate site); 180+ branded partner landings on one codebase (fileReplacements, GitLab CI stage per landing);
+  migration Angular 11/15 → 20–22; corporate site on Angular SSR + Payload CMS; white-label eSIM widget “Svyaz”;
+  Claude Code agents for task triage, landing generation, code review and visual QA, MCP for Tracker, Figma, Swagger.
+- GLOBUS — Frontend Developer, Jul 2018 – now. Client work from UX/UI prototype to production: Chemexsol (oil & gas
+  online system), Yandex Delivery (site for international markets), Trullo (project management SPA).
+- DEX technology — Frontend Developer, Feb 2015 – Jun 2017. SPAs, responsive layouts, REST API (AngularJS, jQuery).
+- radikal.ru — Frontend Developer, Sep 2013 – Jul 2014. Markup and client-side JavaScript for a photo hosting service.
+
+## Own projects
+
+- TopBarber — https://topbarber.app — multi-tenant SaaS for barbershop booking: NestJS (Fastify), Prisma, PostgreSQL,
+  Redis, BullMQ, Socket.IO, Angular, Telegram Bot API, Docker.
+- FitHorse — https://fithorse.ru — running / cycling / skiing app for iOS and Android: Flutter (Riverpod, drift),
+  NestJS 11, Prisma, PostgreSQL, Angular 22 admin (PWA).
+
+## Education
+
+Moscow Institute of Entrepreneurship and Law — Finance and Credit, 2014.

@@ -1,0 +1,157 @@
+@let c = content();
+@let p = c.projects;
+
+<div class="projects__pin">
+  <div class="projects__intro container">
+    <p class="section-head">
+      <span class="section-head__index">{{ p.index }}</span
+      >{{ p.label }}
+    </p>
+    <div class="projects__heading">
+      <h2 class="display h2 projects__title">{{ p.title }}</h2>
+      <p class="projects__hint mono" aria-hidden="true">
+        {{ p.hint }}
+        <svg viewBox="0 0 24 12">
+          <path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5" />
+        </svg>
+      </p>
+    </div>
+  </div>
+
+  <div class="projects__viewport">
+    <ol class="projects__track">
+      @for (item of p.items; track item.id; let i = $index) {
+        <li class="project" [class]="'project--' + item.id" data-project>
+          <article class="project__card" [attr.aria-labelledby]="'project-' + item.id">
+            <div class="project__visual">
+              @if (item.image; as img) {
+                <a
+                  class="frame"
+                  [href]="item.url"
+                  target="_blank"
+                  rel="noopener"
+                  tabindex="-1"
+                  aria-hidden="true"
+                  [attr.data-cursor]="p.open"
+                >
+                  <span class="frame__bar">
+                    <span class="frame__dots"><i></i><i></i><i></i></span>
+                    <span class="frame__url mono">{{ item.urlLabel }}</span>
+                  </span>
+                  <span class="frame__screen">
+                    <picture class="project__media">
+                      <source
+                        type="image/avif"
+                        [attr.srcset]="img.src + '-800.avif 800w, ' + img.src + '-1600.avif 1600w'"
+                        sizes="(max-width: 1023px) 92vw, 50vw"
+                      />
+                      <source
+                        type="image/webp"
+                        [attr.srcset]="img.src + '-800.webp 800w, ' + img.src + '-1600.webp 1600w'"
+                        sizes="(max-width: 1023px) 92vw, 50vw"
+                      />
+                      <img
+                        [src]="img.src + '-1600.webp'"
+                        [alt]="img.alt"
+                        [width]="img.width"
+                        [height]="img.height"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </picture>
+                  </span>
+                </a>
+                @if (img.mobileSrc; as mobile) {
+                  <span class="phone" aria-hidden="true">
+                    <picture>
+                      <source
+                        type="image/avif"
+                        [attr.srcset]="mobile + '-400.avif 400w, ' + mobile + '-780.avif 780w'"
+                        sizes="200px"
+                      />
+                      <source
+                        type="image/webp"
+                        [attr.srcset]="mobile + '-400.webp 400w, ' + mobile + '-780.webp 780w'"
+                        sizes="200px"
+                      />
+                      <img
+                        [src]="mobile + '-780.webp'"
+                        alt=""
+                        width="390"
+                        height="844"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </picture>
+                  </span>
+                }
+              } @else if (item.flow) {
+                <div class="widget" aria-hidden="true">
+                  <div class="widget__top">
+                    <span class="widget__bars"><i></i><i></i><i></i><i></i></span>
+                    <span class="mono">{{ item.name }}</span>
+                    <span class="widget__chip mono">eSIM</span>
+                  </div>
+                  <ol class="widget__steps">
+                    @for (step of item.flow; track step; let s = $index) {
+                      <li class="widget__step" [style.--s]="s">
+                        <span class="widget__node"></span>
+                        <span class="widget__label">{{ step }}</span>
+                        <span class="widget__status mono">0{{ s + 1 }}</span>
+                      </li>
+                    }
+                  </ol>
+                  <span class="widget__cta mono">{{ item.flow[item.flow.length - 1] }} ✓</span>
+                </div>
+              }
+            </div>
+
+            <div class="project__info">
+              <p class="project__num mono">
+                {{ i + 1 < 10 ? '0' + (i + 1) : i + 1 }} / 0{{ p.items.length }}
+              </p>
+              <p class="project__kind mono">{{ item.kind }}</p>
+              <h3 class="project__name display" [id]="'project-' + item.id">{{ item.name }}</h3>
+              <p class="project__desc">{{ item.description }}</p>
+              <ul class="project__highlights">
+                @for (h of item.highlights; track h) {
+                  <li>{{ h }}</li>
+                }
+              </ul>
+              <ul class="project__stack">
+                @for (tech of item.stack; track tech) {
+                  <li class="chip">{{ tech }}</li>
+                }
+              </ul>
+              @if (item.url) {
+                <a class="btn project__link" [href]="item.url" target="_blank" rel="noopener">
+                  {{ item.urlLabel }}
+                  <svg viewBox="0 0 16 16" aria-hidden="true">
+                    <path
+                      d="M5 11 11 5M6 5h5v5"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                    />
+                  </svg>
+                  <span class="sr-only">({{ c.a11y.opensInNewTab }})</span>
+                </a>
+              }
+            </div>
+          </article>
+        </li>
+      }
+
+      <li class="project project--clients" data-project>
+        <div class="clients">
+          <p class="clients__label mono">{{ p.clients.label }}</p>
+          <ul class="clients__list">
+            @for (client of p.clients.items; track client) {
+              <li class="display">{{ client }}</li>
+            }
+          </ul>
+        </div>
+      </li>
+    </ol>
+  </div>
+</div>

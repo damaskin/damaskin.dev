@@ -1,0 +1,159 @@
+<!doctype html>
+<!-- Open Graph card, 1200×630. Rendered to public/og/og-{ru,en}.png with any headless Chrome:
+     open og.html?lang=ru (or en) at 1200×630 and take a screenshot. -->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: U;
+        src: url('../../public/fonts/unbounded-cyrillic-wght-normal.woff2');
+        unicode-range: U+0400-045F;
+        font-weight: 200 900;
+      }
+      @font-face {
+        font-family: U;
+        src: url('../../public/fonts/unbounded-latin-wght-normal.woff2');
+        unicode-range: U+0000-00FF, U+2000-206F;
+        font-weight: 200 900;
+      }
+      @font-face {
+        font-family: M;
+        src: url('../../public/fonts/jetbrains-mono-cyrillic-wght-normal.woff2');
+        unicode-range: U+0400-045F;
+        font-weight: 100 800;
+      }
+      @font-face {
+        font-family: M;
+        src: url('../../public/fonts/jetbrains-mono-latin-wght-normal.woff2');
+        unicode-range: U+0000-00FF, U+2000-206F;
+        font-weight: 100 800;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1200px;
+        height: 630px;
+        background: #0a0a0c;
+        color: #ecebe6;
+        overflow: hidden;
+      }
+      body {
+        position: relative;
+        font-family: U, sans-serif;
+      }
+      svg.field {
+        position: absolute;
+        inset: 0;
+        mask-image: linear-gradient(90deg, transparent 20%, #000 62%);
+      }
+      .wrap {
+        position: absolute;
+        inset: 64px 72px;
+        display: flex;
+        flex-direction: column;
+      }
+      .top {
+        display: flex;
+        justify-content: space-between;
+        font:
+          500 22px M,
+          monospace;
+        color: #a3a3ac;
+        letter-spacing: 0.04em;
+      }
+      .top b {
+        color: #ff5a36;
+        font-weight: 500;
+      }
+      h1 {
+        margin: auto 0 0;
+        font-weight: 650;
+        font-size: 116px;
+        line-height: 0.92;
+        letter-spacing: -0.045em;
+      }
+      h1 span {
+        display: block;
+        padding-left: 0.62em;
+      }
+      h1 i {
+        display: inline-block;
+        width: 0.09em;
+        height: 0.78em;
+        margin-left: 0.08em;
+        background: #ff5a36;
+        vertical-align: -0.02em;
+      }
+      .role {
+        margin-top: 28px;
+        font:
+          500 26px M,
+          monospace;
+        color: #ecebe6;
+      }
+      .role b {
+        color: #ff5a36;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <svg class="field" viewBox="0 0 1200 630" aria-hidden="true"></svg>
+    <div class="wrap">
+      <div class="top">
+        <span><b>&gt;</b> damaskin.dev</span><span id="loc"></span>
+      </div>
+      <h1 id="name"></h1>
+      <p class="role" id="role"></p>
+    </div>
+    <script>
+      const lang = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'ru';
+      const t = {
+        ru: {
+          first: 'Иван',
+          last: 'Дамаскин',
+          role: 'Fullstack-разработчик <b>·</b> Angular / Node.js <b>·</b> AI',
+          loc: 'Москва · удалённо',
+        },
+        en: {
+          first: 'Ivan',
+          last: 'Damaskin',
+          role: 'Fullstack developer <b>·</b> Angular / Node.js <b>·</b> AI',
+          loc: 'Moscow · remote',
+        },
+      }[lang];
+      document.getElementById('name').innerHTML = `${t.first}<span>${t.last}<i></i></span>`;
+      document.getElementById('role').innerHTML = t.role;
+      document.getElementById('loc').textContent = t.loc;
+      // Ridgelines, the same idea as the hero shader
+      const svg = document.querySelector('svg');
+      let seed = 7;
+      const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+      const rows = 26,
+        paths = [];
+      for (let j = rows; j >= 0; j--) {
+        const base = 600 - j * 19;
+        let d = '';
+        const bumps = Array.from({ length: 5 }, () => [
+          760 + rnd() * 380,
+          20 + rnd() * 40,
+          rnd() * 70,
+        ]);
+        for (let x = 0; x <= 1200; x += 6) {
+          let h = 0;
+          for (const [c, w, a] of bumps) h += a * Math.exp(-(((x - c) / w) ** 2));
+          h *= Math.exp(-(((x - 900) / 260) ** 2)) * 1.4;
+          d += `${x ? 'L' : 'M'}${x},${(base - h).toFixed(1)}`;
+        }
+        const heat = Math.min(1, bumps.reduce((s, b) => s + b[2], 0) / 260);
+        const color = heat > 0.72 ? '#ff5a36' : 'rgba(236,235,230,.4)';
+        paths.push(
+          `<path d="${d} L1200,630 L0,630 Z" fill="#0a0a0c" stroke="${color}" stroke-width="1.4" opacity="${0.35 + 0.65 * (1 - j / rows)}"/>`,
+        );
+      }
+      svg.innerHTML = paths.join('');
+      document.fonts.ready.then(() => document.body.setAttribute('data-ready', '1'));
+    </script>
+  </body>
+</html>

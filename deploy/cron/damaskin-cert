@@ -1,0 +1,3 @@
+# damaskin.dev certificate: while the temporary one is active — wait for DNS and issue Let's Encrypt,
+# then renew 30 days before expiry. One log line every 15 min while waiting for DNS, silent afterwards.
+*/15 * * * * root bash /opt/damaskin-dev/deploy/scripts/certs.sh auto >> /var/log/damaskin-cert.log 2>&1
