@@ -15,8 +15,9 @@ const run = (cmd) => execSync(cmd, { cwd: root, stdio: 'inherit' });
 const ssh = (cmd) => `ssh -o BatchMode=yes ${HOST} "${cmd}"`;
 
 console.log('==> upload deploy/');
+// deploy/ru-bridge belongs to the Moscow bridge (npm run deploy:bridge), not to this server
 run(
-  `tar -czf - -C deploy . | ${ssh(`mkdir -p ${REMOTE}/deploy && tar -xzf - --no-same-owner -C ${REMOTE}/deploy`)}`,
+  `tar -czf - --exclude=ru-bridge -C deploy . | ${ssh(`mkdir -p ${REMOTE}/deploy && tar -xzf - --no-same-owner -C ${REMOTE}/deploy`)}`,
 );
 run(ssh(`bash ${REMOTE}/deploy/scripts/deploy.sh`));
 

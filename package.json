@@ -11,7 +11,8 @@
     "format:check": "prettier --check .",
     "check:dist": "node scripts/check-dist.mjs",
     "images": "node scripts/images.mjs",
-    "deploy:infra": "node scripts/deploy-infra.mjs"
+    "deploy:infra": "node scripts/deploy-infra.mjs",
+    "deploy:bridge": "node scripts/deploy-bridge.mjs"
   },
   "private": true,
   "packageManager": "npm@10.9.8",

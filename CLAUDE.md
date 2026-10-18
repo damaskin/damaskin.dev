@@ -37,6 +37,22 @@ npm run check:dist   # проверка сборки
 **Прод — damaskin.dev на `hetzner`** (Raynor, 167.233.91.168), по схеме rayndev / vanglera: общий `edge-nginx`
 (SNI passthrough) → контейнер `damaskin-nginx` (терминирует TLS, отдаёт статику). Домен в Cloudflare.
 
+**DNS смотрит на московский мост `ru-bridge`** (132.243.16.97, A `@` и `www`, DNS only, без AAAA), как у fithorse.ru /
+lunaclean.ru: ТСПУ замораживает часть новых соединений Россия → Hetzner после ~16 КБ, а страница — ~110 КБ. Мост
+терминирует TLS своим Let's Encrypt и ходит на Hetzner через общие SSH-туннели FitHorse (`127.0.0.1:9443/9444` →
+edge, SNI `damaskin.dev`, `proxy_ssl_verify on`), прямой `167.233.91.168:443` — запасной.
+
+- Файлы моста — `deploy/ru-bridge/` (конфиг `zz-damaskin-bridge.conf`, `auto.sh`, `setup.sh`, logrotate), ставятся
+  `npm run deploy:bridge`. Сервер общий: setup.sh трогает только свои файлы (`/etc/damaskin-bridge`,
+  `sites-enabled/zz-damaskin-bridge.conf`, `/etc/cron.d/damaskin-bridge`) и перезагружает nginx только после `nginx -t`.
+- `auto.sh` (cron раз в 15 мин, лог `/var/log/damaskin-bridge.log`): ставит :80 (ACME, которых нет у моста, — на
+  Hetzner), ждёт DNS, выпускает сертификат моста, ждёт настоящий на Hetzner и включает :443. Продление — общий
+  `certbot.timer` моста.
+- Кеш моста: бандлы с хэшем и шрифты — по заголовкам origin (год), `img/og/cv` — час, страницы — минута с фоновым
+  обновлением; при сбое Германии отдаётся последняя копия. **Деплой виден из России через ~1 мин.** Заголовок
+  `X-Bridge-Cache`, журнал `/var/log/nginx/damaskin/access.log` (JSON, 14 дней). `/bridge-health` — сам мост,
+  `/health` — вся цепочка без кеша.
+
 - Каталоги на сервере: `/opt/damaskin-dev/deploy` (копия `deploy/`), `site/releases/<id>` + симлинк `current`,
   `letsencrypt/active` → `bootstrap/` или `live/damaskin.dev`, `bin/ci-deploy`.
 - **Контент** деплоит CI на push в `main`: архив сборки по ssh ключом, привязанным в `/root/.ssh/authorized_keys`
@@ -44,7 +60,8 @@ npm run check:dist   # проверка сборки
   Откат: `ssh hetzner "SSH_ORIGINAL_COMMAND='rollback <id>' /opt/damaskin-dev/bin/ci-deploy"` (`releases` — список).
 - **Инфраструктура** (compose, nginx, сертификат, cron) — `npm run deploy:infra` с рабочей машины (ssh-алиас `hetzner`).
 - Сертификат — `deploy/scripts/certs.sh`, cron `/etc/cron.d/damaskin-cert` каждые 15 мин: пока стоит временный,
-  проверяет, что домен по HTTP доходит до сервера, и выпускает Let's Encrypt; потом продлевает. Лог `/var/log/damaskin-cert.log`.
+  проверяет, что домен по HTTP доходит до сервера (через мост: его :80 проксирует чужие ACME-токены на edge), и
+  выпускает Let's Encrypt; потом продлевает. Лог `/var/log/damaskin-cert.log`.
 - Маршрут в общем edge — строки `damaskin` в `personal/rayn-bot/infra/edge/nginx.conf` (в git! правка только на
   сервере пропадёт при деплое rayn).
 - Секреты GitHub (environment `production`): `DEPLOY_HOST`, `DEPLOY_SSH_KEY`, `DEPLOY_KNOWN_HOSTS`.

@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # TLS certificate for damaskin.dev + www.damaskin.dev (Let's Encrypt, HTTP-01 through the shared edge webroot).
 #
+# DNS points at ru-bridge (132.243.16.97, deploy/ru-bridge): the bridge answers its own challenges and forwards the
+# rest to edge :80 here, so Let's Encrypt reaches the shared webroot through it. The bridge verifies this
+# certificate (proxy_ssl_verify) and enables its :443 only once the real one is here.
+#
 # nginx reads the certificate from /opt/damaskin-dev/letsencrypt/active — a relative symlink to:
 #   bootstrap/        — temporary self-signed, so nginx can start before the real one exists;
 #   live/damaskin.dev — the real one from Let's Encrypt.
@@ -42,8 +46,9 @@ ensure() {
 }
 
 # The domain is ready when a token dropped into the shared webroot comes back over plain HTTP from both names —
-# exactly the request Let's Encrypt makes. This works for a DNS-only A record and behind the Cloudflare proxy alike,
-# and catches a stray AAAA record or a wrong IP without parsing DNS.
+# exactly the request Let's Encrypt makes. This works whether the name points here or at ru-bridge (it forwards the
+# challenges it does not hold to edge :80 here), and catches a stray AAAA record, a wrong IP or a bridge without the
+# damaskin.dev site without parsing DNS.
 domain_ready() {
   local dir="$WEBROOT_HOST/.well-known/acme-challenge" token h body
   token="probe-$(date +%s)-$RANDOM"
@@ -53,7 +58,7 @@ domain_ready() {
     body="$(curl -fsSkL --max-time 15 "http://$h/.well-known/acme-challenge/$token" 2>/dev/null || true)"
     if [ "$body" != "$token" ]; then
       rm -f "$dir/$token"
-      log "waiting for DNS: http://$h does not reach this server yet"
+      log "waiting for DNS: http://$h does not reach this server (through ru-bridge) yet"
       return 1
     fi
   done
