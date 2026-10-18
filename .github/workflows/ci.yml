@@ -44,8 +44,12 @@ jobs:
       - name: Check build output
         run: npm run check:dist
 
+      # collect → save reports → assert, so the reports are kept even when an assertion fails
       - name: Lighthouse
-        run: npx --yes @lhci/cli@0.15.1 autorun
+        run: |
+          npx --yes @lhci/cli@0.15.1 collect
+          npx --yes @lhci/cli@0.15.1 upload
+          npx --yes @lhci/cli@0.15.1 assert
 
       - name: Lighthouse reports
         if: always()

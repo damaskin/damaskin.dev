@@ -134,17 +134,26 @@ export class SignalField {
 
   /** Returns null when WebGL2 is unavailable — the hero then keeps its CSS fallback. */
   static create(canvas: HTMLCanvasElement, options: SignalFieldOptions): SignalField | null {
+    // No GPU (software rendering, e.g. SwiftShader) means a full-screen shader burns the CPU —
+    // such browsers keep the static CSS background instead.
     const gl = canvas.getContext('webgl2', {
       antialias: false,
       alpha: false,
       powerPreference: 'high-performance',
+      failIfMajorPerformanceCaveat: true,
     });
-    if (!gl) return null;
+    if (!gl || SignalField.isSoftware(gl)) return null;
     try {
       return new SignalField(canvas, gl, options);
     } catch {
       return null;
     }
+  }
+
+  private static isSoftware(gl: WebGL2RenderingContext): boolean {
+    const info = gl.getExtension('WEBGL_debug_renderer_info');
+    const renderer = String(gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER));
+    return /swiftshader|llvmpipe|softpipe|software|basic render/i.test(renderer);
   }
 
   private constructor(
