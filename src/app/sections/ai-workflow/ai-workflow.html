@@ -1,55 +1,61 @@
 @let a = content().ai;
 
-<div class="container ai__grid">
-  <div class="ai__text">
-    <p class="section-head">
-      <span class="section-head__index">{{ a.index }}</span
-      >{{ a.label }}
-    </p>
-    <h2 class="display ai__title" data-reveal>{{ a.title }}</h2>
-    <p class="ai__lead" data-reveal>{{ a.text }}</p>
+<div class="container section__grid">
+  <header class="section__label">
+    <span class="section__index" aria-hidden="true">{{ a.index }}</span>
+    <h2 class="section__title">{{ a.label }}</h2>
+  </header>
 
-    <ol class="ai__points" data-reveal>
+  <div class="body">
+    <p class="section__lead">{{ a.title }}</p>
+    <p class="text reveal">{{ a.text }}</p>
+
+    <ol class="points reveal">
       @for (point of a.points; track point.title; let i = $index) {
-        <li class="ai__point">
-          <span class="ai__point-idx mono" aria-hidden="true">0{{ i + 1 }}</span>
-          <h3 class="ai__point-title">{{ point.title }}</h3>
-          <p class="ai__point-text">{{ point.text }}</p>
+        <li class="point">
+          <span class="point__idx mono" aria-hidden="true">0{{ i + 1 }}</span>
+          <h3 class="point__title">{{ point.title }}</h3>
+          <p class="point__text">{{ point.text }}</p>
         </li>
       }
     </ol>
-  </div>
 
-  <figure class="terminal">
-    <div class="terminal__bar">
-      <span class="terminal__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-      <span class="terminal__title mono">{{ a.terminalTitle }}</span>
-    </div>
-    <div class="terminal__body mono">
-      @for (line of a.terminal; track $index) {
-        @switch (line.kind) {
-          @case ('cmd') {
-            <p class="t-line t-line--cmd" data-line>
-              <span class="t-prompt" aria-hidden="true">❯</span>
-              <span data-type>{{ line.text }}</span
-              ><span class="t-caret" aria-hidden="true"></span>
-            </p>
-          }
-          @case ('step') {
-            <p class="t-line" data-line>
-              <span class="t-icon" data-icon aria-hidden="true">✓</span>
-              <span class="t-tag">{{ line.tag }}</span>
-              <span class="t-text">{{ line.text }}</span>
-            </p>
-          }
-          @default {
-            <p class="t-line t-line--ok" data-line>
-              <span aria-hidden="true">✔ </span>{{ line.text }}
-            </p>
+    <figure
+      class="terminal"
+      #terminal
+      [class.is-armed]="replay() !== 'off'"
+      [class.is-playing]="replay() === 'play'"
+    >
+      <div class="terminal__bar" aria-hidden="true">
+        <span class="terminal__dots"><i></i><i></i><i></i></span>
+        <span class="terminal__title mono">{{ a.terminalTitle }}</span>
+      </div>
+      <div class="terminal__body mono">
+        @for (line of a.terminal; track $index; let i = $index) {
+          @switch (line.kind) {
+            @case ('cmd') {
+              <p class="t-line t-line--cmd" [style.--i]="i">
+                <span class="t-prompt" aria-hidden="true">❯</span>
+                <span>{{ line.text }}</span>
+              </p>
+            }
+            @case ('step') {
+              <p class="t-line" [style.--i]="i">
+                <span class="t-icon" aria-hidden="true">✓</span>
+                <span class="t-tag">{{ line.tag }}</span>
+                <span class="t-text">{{ line.text }}</span>
+              </p>
+            }
+            @default {
+              <p class="t-line t-line--ok" [style.--i]="i">
+                <span aria-hidden="true">✔ </span>{{ line.text
+                }}<span class="t-caret" aria-hidden="true"></span>
+              </p>
+            }
           }
         }
-      }
-    </div>
-    <figcaption class="terminal__note mono">{{ a.terminalNote }}</figcaption>
-  </figure>
+      </div>
+      <figcaption class="terminal__note mono">{{ a.terminalNote }}</figcaption>
+    </figure>
+  </div>
 </div>

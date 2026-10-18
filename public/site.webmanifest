@@ -3,8 +3,8 @@
   "short_name": "damaskin.dev",
   "start_url": "/",
   "display": "browser",
-  "background_color": "#0a0a0c",
-  "theme_color": "#0a0a0c",
+  "background_color": "#f5f4ef",
+  "theme_color": "#f5f4ef",
   "icons": [
     { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any" },
     { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512" }

@@ -1,25 +1,31 @@
 # damaskin.dev — CV-сайт Ивана Дамаскина
 
 Одностраничное CV/портфолио. Angular 22 (standalone, Signals, zoneless) со статическим пререндером (SSG, `outputMode: static`):
-`/` — русская версия, `/en` — английская (route data `lang`, один компонент `pages/home.ts`). Анимации — GSAP 3.15
-(ScrollTrigger, SplitText, ScrambleText) + Lenis, грузятся лениво из `core/motion.ts`; фон героя — WebGL2-шейдер
-`sections/hero/signal-field.ts`. Репозиторий: github.com/damaskin/damaskin.dev (публичный).
+`/` — русская версия, `/en` — английская (route data `lang`, один компонент `pages/home.ts`). Дизайн — «резюме, которое
+читается за 30 секунд»: светлая «бумажная» тема по умолчанию, тёмная — по системе или переключателю в шапке
+(`data-theme` на `<html>`, выбор в `localStorage`, ставится инлайн-скриптом в `index.html` до первой отрисовки).
+Анимационных библиотек нет: только CSS (scroll-driven `.reveal`, рост полос таймлайна) и `prefers-reduced-motion`.
+Репозиторий: github.com/damaskin/damaskin.dev (публичный).
 
 ## Где что
 
 - `src/app/content/content.ru.ts`, `content.en.ts` — **все тексты**, единственный источник; структура — `types.ts`,
-  общие факты (ссылки, стеки, картинки) — `shared.ts`. Тест `content.spec.ts` следит, чтобы RU и EN совпадали по составу.
-- `core/motion.ts` — `Motion.load()` (GSAP + Lenis один раз, только в браузере) и `useMotion(setup)`: запускает анимации
-  после первого рендера в `gsap.context`, откатывает при destroy. В пререндере ничего анимационного не выполняется.
-- `core/seo.ts` — title, description, OG, canonical/hreflang, JSON-LD Person, preload шрифта.
-- `[data-reveal]` — общий «въезд» при скролле (`pages/home.ts`). Под `html.motion` (ставится инлайн-скриптом в
-  `index.html`, если нет reduced-motion) такие элементы скрыты до старта GSAP; сторож снимает класс через 3.5 с.
-- Имя в герое — буквы рендерятся на сервере, въезжают чистым CSS (не зависит от JS, важно для LCP).
-- `sections/projects` — на ≥1024px секция закрепляется и карточки едут вбок (ScrollTrigger pin + containerAnimation).
-  Заголовок внутри закреплённого блока анимируется там же, не через `[data-reveal]`.
+  общие факты (ссылки, стеки, картинки) — `shared.ts`, расчёт периодов и таймлайна карьеры — `index.ts`
+  (`buildTimeline`). Тест `content.spec.ts` следит, чтобы RU и EN совпадали по составу.
+- `core/seo.ts` — title, description, OG, canonical/hreflang, JSON-LD Person, preload шрифта Onest.
+- Секция = `.section` + `.section__grid`: слева метка (номер + `h2`, на ≥1024px липкая), справа содержимое.
+  Общие классы — в `src/styles.scss` (токены тем, `.btn`, `.link`, `.tag`, `.reveal`, печать, `.no-print`/`.print-only`).
+- `.reveal` — CSS-въезд при скролле (`animation-timeline: view()`), только где поддерживается; без поддержки и при
+  reduced-motion контент просто виден. JS ничего не прячет.
+- `sections/experience` — таймлайн (полоса на работу, ось от первого года до текущего, текущие работы — до даты сборки)
+  и список работ; строки таймлайна — ссылки на `#job-<id>`.
+- `sections/ai-workflow` — терминал проигрывается построчно (IntersectionObserver), только если он ниже первого экрана.
+- Печать (Ctrl+P) — отдельные `@media print` в глобальных стилях и секциях: ч/б, контакты под заголовком, без скриншотов.
 - Скриншоты проектов: `public/img/projects/*.{avif,webp}` из PNG через `npm run images -- <папка>`
-  (`<name>-desktop.png` 1440×900, `<name>-mobile.png` 390×844@2x). OG-карточки — `scripts/og/og.html` (1200×630).
-- Шрифты — `public/fonts`, только latin + cyrillic сабсеты Unbounded / Onest / JetBrains Mono (из @fontsource-variable).
+  (`<name>-desktop.png` 1440×900, `<name>-mobile.png` 390×844@2x). OG-карточки — `scripts/og/og.html` (1200×630,
+  рендер headless Chrome, команда в комментарии файла).
+- Шрифты — `public/fonts`, только latin + cyrillic сабсеты Onest / JetBrains Mono (из @fontsource-variable).
+  `/fonts/` кешируется на год как immutable: новый файл — новое имя.
 
 ## Команды
 

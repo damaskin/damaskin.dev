@@ -10,25 +10,25 @@ Live at **[damaskin.dev](https://damaskin.dev)** (Russian) and **[damaskin.dev/e
 - **Angular 22** — standalone components, Signals, zoneless change detection, new control flow.
 - **Static prerender (SSG)** — both language versions are rendered to HTML at build time (`outputMode: static`),
   hydrated in the browser. Content, meta tags, Open Graph, `hreflang` and JSON-LD are all in the HTML.
-- **Motion** — GSAP 3 (ScrollTrigger, SplitText, ScrambleText) + Lenis smooth scroll, loaded lazily after the first
-  render; nothing animation-related is in the initial bundle. The hero name rises in with pure CSS, so it is on
-  screen at first paint.
-- **WebGL2 hero** — a ridgeline "signal field" drawn in a single fragment shader
-  ([`signal-field.ts`](src/app/sections/hero/signal-field.ts)): lines occlude each other, peaks glow, the pointer
-  sends a pulse through them. Pauses off-screen, lowers its resolution on slow GPUs, falls back to CSS without WebGL2.
-- **Accessibility** — `prefers-reduced-motion` turns every effect off, content never depends on JS to be visible,
-  keyboard and screen-reader friendly. Lighthouse (desktop): 99 / 100 / 100 / 100.
+- **A CV that reads in 30 seconds** — the first screen answers who, what, where and how to reach; experience opens
+  with a career timeline (one bar per job, 2013 → now), then the details. Light "paper" theme by default, dark one
+  follows the system or the toggle in the header.
+- **No animation library** — small touches are CSS only (scroll-driven reveals, the timeline bars growing in) and
+  switch off with `prefers-reduced-motion`; the AI section replays an agent session with an IntersectionObserver.
+  Content never depends on JS to be visible.
+- **Print-ready** — Ctrl+P gives a clean black-on-white résumé with contacts and URLs spelled out.
+- **Accessibility** — keyboard and screen-reader friendly, WCAG AA contrast in both themes.
+  Lighthouse (desktop): 100 / 100 / 100 / 100.
 
 ## Structure
 
 ```
 src/app/
-  content/         all texts (RU + EN) and shared facts — the only place to edit the CV
-  core/            Motion (GSAP + Lenis loader, useMotion helper), Seo (head tags, JSON-LD)
+  content/         all texts (RU + EN), shared facts and the timeline maths — the only place to edit the CV
+  core/            Seo (head tags, JSON-LD, font preloads)
   pages/home.ts    the page: header, 7 sections, footer
-  sections/        hero (+ WebGL field), metrics, about, experience (git-graph timeline), projects (pinned
-                   horizontal scroll), ai-workflow (replayed agent session), stack, contact, header, footer
-  ui/              cursor, magnetic directive
+  sections/        hero (with key numbers), about, experience (career timeline + jobs), projects,
+                   ai-workflow (replayed agent session), stack, contact, header, footer
 public/            fonts (self-hosted subsets), images, CV PDF, OG cards, robots / sitemap / llms.txt
 deploy/            server side: nginx container, TLS, CI entry point (see below)
 scripts/           build check, image pipeline, OG template, infrastructure deploy

@@ -1,20 +1,12 @@
 import { DOCUMENT } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Motion } from '../core/motion';
 import { Home } from './home';
 
-/** Renders the page without animations (Motion never resolves, like during prerender). */
 async function render(lang: 'ru' | 'en') {
   TestBed.configureTestingModule({
     imports: [Home],
-    providers: [
-      { provide: ActivatedRoute, useValue: { snapshot: { data: { lang } } } },
-      {
-        provide: Motion,
-        useValue: { load: () => new Promise(() => undefined), scrollTo: () => Promise.resolve() },
-      },
-    ],
+    providers: [{ provide: ActivatedRoute, useValue: { snapshot: { data: { lang } } } }],
   });
   const fixture = TestBed.createComponent(Home);
   await fixture.whenStable();
@@ -29,7 +21,23 @@ describe('Home', () => {
       expect(el.querySelector(`#${id}`), id).not.toBeNull();
     }
     expect(el.querySelectorAll('[data-job]').length).toBe(4);
+    expect(el.querySelectorAll('.trow').length).toBe(4);
     expect(el.querySelector('a[href="mailto:damaskin@live.ru"]')).not.toBeNull();
+  });
+
+  it('links every timeline row to its job', async () => {
+    const { el } = await render('ru');
+    for (const a of Array.from(el.querySelectorAll<HTMLAnchorElement>('.trow__label'))) {
+      const id = a.getAttribute('href')!.slice(1);
+      expect(el.querySelector(`[id="${id}"][data-job]`), id).not.toBeNull();
+    }
+  });
+
+  it('gives every section a heading', async () => {
+    const { el } = await render('en');
+    for (const section of Array.from(el.querySelectorAll('main > [id]:not(#top)'))) {
+      expect(section.querySelector('h2')?.textContent?.trim(), section.id).toBeTruthy();
+    }
   });
 
   it('sets language, title, canonical and hreflang for the English page', async () => {
@@ -47,6 +55,7 @@ describe('Home', () => {
       doc.querySelector('script[type="application/ld+json"]')?.textContent ?? '{}',
     );
     expect(ld['@type']).toBe('Person');
+    expect(ld.jobTitle).toContain('Fullstack');
   });
 
   it('opens external links in a new tab safely', async () => {

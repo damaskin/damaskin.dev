@@ -1,285 +1,207 @@
 :host {
-  position: relative;
   display: block;
-  min-height: max(660px, 100svh);
-  padding-top: calc(var(--header-h) + clamp(24px, 7vh, 88px));
-  overflow: clip;
-
-  // Without WebGL2 the hero keeps a static glow in place of the field.
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(60% 50% at 66% 78%, rgb(255 90 54 / 0.16), transparent 70%),
-      repeating-linear-gradient(0deg, rgb(236 235 230 / 0.05) 0 1px, transparent 1px 22px);
-    mask-image: linear-gradient(to top, #000 10%, transparent 85%);
-    transition: opacity 1s;
-  }
-
-  &.has-field::before {
-    opacity: 0;
-  }
+  padding-block: clamp(28px, 4vw + 3vh, 112px) clamp(56px, 7vw, 96px);
 }
 
-.hero__canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-
-  :host(.has-field) & {
-    opacity: 1;
-  }
-}
-
-.hero__shade {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, rgb(10 10 12 / 0.82) 0%, rgb(10 10 12 / 0.45) 38%, transparent 64%),
-    linear-gradient(0deg, var(--bg) 0%, transparent 22%);
-
-  @media (max-width: 899px) {
-    background: linear-gradient(
-      180deg,
-      rgb(10 10 12 / 0.2) 0%,
-      rgb(10 10 12 / 0.75) 55%,
-      rgb(10 10 12 / 0.92) 100%
-    );
-  }
-}
-
-.hero__inner {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(28px, 5vh, 56px);
-  min-height: calc(max(660px, 100svh) - var(--header-h) - clamp(24px, 7vh, 88px));
-  padding-bottom: clamp(88px, 13vh, 140px);
-}
-
-.hero__eyebrow {
-  font-size: clamp(0.75rem, 0.6rem + 0.4vw, 0.9375rem);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--fg-muted);
-
-  &::before {
-    content: '> ';
-    color: var(--accent);
-  }
-}
-
-.hero__name {
-  display: flex;
-  flex-direction: column;
-  font-size: clamp(3rem, 12vw, 12.5rem);
-  line-height: 0.92;
-  letter-spacing: -0.045em;
-  font-weight: 650;
-}
-
-.hero__line {
-  display: block;
-  padding-bottom: 0.06em; // room for the mask below the baseline
-  overflow: hidden;
-  white-space: nowrap;
-  will-change: transform;
-
-  &--last {
-    padding-left: 0.62em;
-
-    @media (max-width: 600px) {
-      padding-left: 0.3em;
-    }
-  }
-}
-
-// Terminal caret after the last name
-.hero__caret {
-  display: inline-block;
-  width: 0.09em;
-  height: 0.78em;
-  margin-left: 0.08em;
-  vertical-align: -0.02em;
-  background: var(--accent);
-  animation: blink 1.1s steps(1) infinite;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
-}
-
-.hero__bottom {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-  grid-template-areas:
-    'lead actions'
-    'lead meta';
-  align-items: end;
-  gap: 24px clamp(24px, 6vw, 96px);
-  margin-top: auto;
-
-  @media (max-width: 899px) {
-    grid-template-columns: 1fr;
-    grid-template-areas: 'lead' 'actions' 'meta';
-  }
-}
-
-.hero__lead {
-  grid-area: lead;
-  max-width: 46ch;
-  font-size: clamp(1.0625rem, 0.95rem + 0.45vw, 1.3125rem);
-  line-height: 1.55;
-  color: var(--fg);
-  text-wrap: pretty;
-}
-
-.hero__actions {
-  grid-area: actions;
+.status {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  justify-self: end;
-
-  @media (max-width: 899px) {
-    justify-self: start;
-  }
-}
-
-.hero__meta {
-  grid-area: meta;
-  justify-self: end;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 24px;
-  font-size: 0.8125rem;
+  align-items: center;
+  gap: 10px 18px;
+  font-size: 0.9375rem;
   color: var(--fg-muted);
-
-  @media (max-width: 899px) {
-    justify-self: start;
-  }
 }
 
-.hero__status {
+.status__badge {
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  padding: 5px 14px 5px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
   color: var(--fg);
+  font-weight: 500;
 }
 
-.hero__dot {
+.status__dot {
   position: relative;
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #3ddc84;
+  background: var(--ok);
 
   &::after {
     content: '';
     position: absolute;
-    inset: -5px;
+    inset: -4px;
     border-radius: 50%;
-    border: 1px solid #3ddc84;
-    animation: ping 2.2s var(--ease-out) infinite;
+    border: 1px solid var(--ok);
+    animation: ping 2.4s var(--ease-out) infinite;
   }
 }
 
 @keyframes ping {
-  0% {
-    transform: scale(0.4);
+  from {
+    transform: scale(0.5);
     opacity: 1;
   }
-  100% {
-    transform: scale(1.8);
+  to {
+    transform: scale(1.7);
     opacity: 0;
   }
 }
 
-.hero__scroll {
-  position: absolute;
-  z-index: 1;
-  right: var(--gutter);
-  bottom: 28px;
+.name {
+  margin-top: clamp(24px, 4vh, 40px);
+  font-size: clamp(2.75rem, 0.9rem + 7.6vw, 7.5rem);
+  font-weight: 650;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.role {
+  margin-top: clamp(12px, 1.6vw, 20px);
+  font-size: clamp(1.25rem, 0.85rem + 1.6vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: var(--fg-muted);
+}
+
+.role__part {
+  white-space: nowrap;
+}
+
+.lead {
+  max-width: 60ch;
+  margin-top: clamp(20px, 3vw, 32px);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.actions {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   align-items: center;
   gap: 12px;
-  font-size: 0.6875rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--fg-muted);
-  writing-mode: vertical-rl;
+  margin-top: clamp(28px, 3.5vw, 40px);
+}
+
+.actions__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin-left: 12px;
+
+  @media (max-width: 599px) {
+    flex-basis: 100%;
+    margin: 8px 0 0;
+  }
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: clamp(48px, 7vw, 88px);
+  border-top: 1px solid var(--line);
 
   @media (max-width: 899px) {
-    display: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-.hero__scroll-line {
-  position: relative;
-  width: 1px;
-  height: 56px;
-  background: var(--line-strong);
-  overflow: hidden;
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px 24px 0 0;
 
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--accent);
-    animation: drip 2s var(--ease-out) infinite;
+  @media (min-width: 900px) {
+    & + & {
+      padding-left: 24px;
+      border-left: 1px solid var(--line);
+    }
+  }
+
+  @media (max-width: 899px) {
+    padding-bottom: 20px;
+
+    &:nth-child(even) {
+      padding-left: 20px;
+      border-left: 1px solid var(--line);
+    }
+
+    &:nth-child(n + 3) {
+      border-top: 1px solid var(--line);
+    }
   }
 }
 
-@keyframes drip {
-  0% {
-    transform: translateY(-100%);
+.metric__value {
+  font-size: clamp(2rem, 1.3rem + 2.2vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.metric__label {
+  max-width: 26ch;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--fg-muted);
+}
+
+@media print {
+  :host {
+    padding-block: 0 8pt;
   }
-  60%,
-  100% {
-    transform: translateY(100%);
+
+  .name {
+    margin-top: 10pt;
+    font-size: 30pt;
   }
-}
 
-// ---------- Intro (CSS only, plays from the first paint) ----------
-
-.hero__char {
-  display: inline-block;
-  animation: char-up 1.25s var(--ease-out) both;
-  animation-delay: calc(0.12s + var(--i) * 0.04s);
-}
-
-@keyframes char-up {
-  from {
-    transform: translateY(105%);
+  .role {
+    margin-top: 4pt;
+    font-size: 14pt;
   }
-}
 
-// Only transform, so the paragraph counts as painted (LCP) right away
-[data-hero='rise'] {
-  animation: rise 1.3s var(--ease-out) 0.45s both;
-}
-
-[data-hero='fade'] {
-  animation: fade-up 1.2s var(--ease-out) var(--d, 0.6s) both;
-}
-
-@keyframes rise {
-  from {
-    transform: translateY(28px);
+  .lead {
+    max-width: none;
+    margin-top: 8pt;
+    font-size: 10.5pt;
   }
-}
 
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
+  .print-contacts {
+    margin-top: 6pt;
+    font-size: 9pt;
+  }
+
+  .metrics {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: 14pt;
+  }
+
+  .metric {
+    padding: 8pt 8pt 0 !important;
+    border-top: 0 !important;
+    border-left: 1px solid var(--line) !important;
+
+    &:first-child {
+      padding-left: 0 !important;
+      border-left: 0 !important;
+    }
+  }
+
+  .metric__value {
+    font-size: 18pt;
+  }
+
+  .metric__label {
+    font-size: 8.5pt;
   }
 }

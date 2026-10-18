@@ -16,6 +16,7 @@ export const EN: SiteContent = {
     skip: 'Skip to content',
     nav: 'Main navigation',
     langSwitch: 'Русская версия',
+    theme: 'Switch colour theme',
     opensInNewTab: 'opens in a new tab',
     copied: 'Address copied',
     copy: 'Copy email address',
@@ -30,7 +31,7 @@ export const EN: SiteContent = {
   cvLabel: 'CV.pdf',
   cvHref: CV_PATH,
   hero: {
-    eyebrow: 'Fullstack developer · Angular / Node.js',
+    role: 'Fullstack developer · Angular / Node.js',
     firstName: 'Ivan',
     lastName: 'Damaskin',
     lead:
@@ -40,13 +41,12 @@ export const EN: SiteContent = {
     location: 'Moscow · remote · open to business trips',
     primaryCta: 'Get in touch',
     secondaryCta: 'Download CV',
-    scroll: 'Scroll',
   },
   metrics: [
-    { value: 11, suffix: '+', label: 'years of commercial web development' },
-    { value: 8, label: 'products in the INSAPP insurtech frontend' },
-    { value: 180, suffix: '+', label: 'partner landings and widgets' },
-    { value: 22, from: 11, prefix: '11 → ', label: 'Angular: product line migration' },
+    { value: '11+', label: 'years of commercial web development' },
+    { value: '8', label: 'products in the INSAPP insurtech frontend' },
+    { value: '180+', label: 'partner landings and widgets on a single codebase' },
+    { value: '11 → 22', label: 'Angular: product line migration' },
   ],
   about: {
     index: '01',
@@ -67,7 +67,8 @@ export const EN: SiteContent = {
   experience: {
     index: '02',
     label: 'Experience',
-    title: 'git log --graph',
+    title: '11+ years of commercial web development, almost five of them in insurtech.',
+    timelineLabel: 'Career timeline',
     present: 'now',
     stackLabel: 'Stack',
     jobs: [
@@ -77,7 +78,6 @@ export const EN: SiteContent = {
         role: 'Frontend Developer',
         start: '2021-12',
         end: null,
-        lane: 0,
         summary:
           'Insurtech platform: insurance and financial products that banks, marketplaces and services embed as landings and widgets.',
         points: [
@@ -96,7 +96,6 @@ export const EN: SiteContent = {
         role: 'Frontend Developer',
         start: '2018-07',
         end: null,
-        lane: 1,
         summary: 'Web services and websites for clients: from the UX/UI prototype to production.',
         points: [
           'Chemexsol — a digital online system for the oil and gas industry: UX/UI design and the web app frontend.',
@@ -111,7 +110,6 @@ export const EN: SiteContent = {
         role: 'Frontend Developer',
         start: '2015-02',
         end: '2017-06',
-        lane: 0,
         summary: 'Client side of web projects: SPAs, responsive layouts, REST API integration.',
         points: [],
         stack: STACK.dex,
@@ -122,7 +120,6 @@ export const EN: SiteContent = {
         role: 'Frontend Developer',
         start: '2013-09',
         end: '2014-07',
-        lane: 0,
         summary: 'Markup and client-side JavaScript for a photo hosting service.',
         points: [],
         stack: STACK.radikal,
@@ -137,8 +134,6 @@ export const EN: SiteContent = {
     index: '03',
     label: 'Projects',
     title: 'Shipped and running',
-    hint: 'Keep scrolling — projects slide sideways',
-    open: 'Open',
     items: [
       {
         id: 'topbarber',
@@ -257,7 +252,6 @@ export const EN: SiteContent = {
   stack: {
     index: '05',
     label: 'Stack',
-    title: 'Toolbox',
     groups: [
       {
         title: 'Frontend',
@@ -335,7 +329,7 @@ export const EN: SiteContent = {
     ],
   },
   footer: {
-    builtWith: 'Angular 22 · SSG · Signals · GSAP · WebGL',
+    builtWith: 'Angular 22 · SSG · Signals · zoneless',
     source: 'Source on GitHub',
     build: 'build',
   },

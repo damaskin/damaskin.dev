@@ -33,7 +33,7 @@ declare const BUILD_SHA: string;
       align-items: center;
       justify-content: space-between;
       gap: 12px 32px;
-      padding-block: 28px;
+      padding-block: 32px;
       font-size: 0.8125rem;
       color: var(--fg-muted);
     }
@@ -56,6 +56,7 @@ declare const BUILD_SHA: string;
       text-decoration-color: var(--accent);
     }
   `,
+  host: { class: 'no-print' },
 })
 export class SiteFooter {
   readonly content = input.required<SiteContent>();

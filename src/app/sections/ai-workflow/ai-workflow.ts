@@ -1,65 +1,54 @@
-import { Component, input } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  ElementRef,
+  afterNextRender,
+  inject,
+  input,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { SiteContent } from '../../content';
-import { useMotion } from '../../core/motion';
-
-const SPINNER = '⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏';
 
 @Component({
   selector: 'dd-ai-workflow',
   templateUrl: './ai-workflow.html',
   styleUrl: './ai-workflow.scss',
-  host: { class: 'section ai', id: 'ai' },
+  host: { class: 'section', id: 'ai' },
 })
 export class AiWorkflow {
   readonly content = input.required<SiteContent>();
 
+  /**
+   * The terminal replays the agent session line by line when it scrolls into view. The lines are
+   * in the HTML and visible by default; they are hidden ('wait') only if the browser can play
+   * them back — the terminal is still below the fold and motion is not reduced.
+   */
+  protected readonly replay = signal<'off' | 'wait' | 'play'>('off');
+  private readonly terminal = viewChild.required<ElementRef<HTMLElement>>('terminal');
+
   constructor() {
-    // The terminal replays an agent session once it scrolls into view.
-    useMotion(({ gsap, ScrollTrigger, reduced }, host) => {
-      if (reduced) return;
-      const lines = gsap.utils.toArray<HTMLElement>('[data-line]', host);
-      const typed = host.querySelector<HTMLElement>('[data-type]');
-      const command = typed?.textContent ?? '';
-      gsap.set(lines, { autoAlpha: 0 });
-      host.querySelector('.terminal')?.classList.add('is-armed');
-
-      const tl = gsap.timeline({ paused: true });
-      tl.set(lines[0], { autoAlpha: 1 });
-      if (typed) {
-        const state = { n: 0 };
-        typed.textContent = '';
-        tl.to(state, {
-          n: command.length,
-          duration: command.length * 0.035,
-          ease: 'none',
-          onUpdate: () => (typed.textContent = command.slice(0, Math.round(state.n))),
-        });
+    const destroyRef = inject(DestroyRef);
+    afterNextRender(() => {
+      const el = this.terminal().nativeElement;
+      if (
+        !('IntersectionObserver' in window) ||
+        matchMedia('(prefers-reduced-motion: reduce)').matches ||
+        el.getBoundingClientRect().top < innerHeight
+      ) {
+        return;
       }
-      for (const line of lines.slice(1)) {
-        const icon = line.querySelector<HTMLElement>('[data-icon]');
-        const spin = { i: 0 };
-        tl.set(line, { autoAlpha: 1 }, '+=0.15');
-        if (icon) {
-          tl.add(() => line.classList.add('is-running'));
-          tl.to(spin, {
-            i: 12,
-            duration: 0.55,
-            ease: 'none',
-            onUpdate: () => (icon.textContent = SPINNER[Math.floor(spin.i) % SPINNER.length]),
-          });
-          tl.add(() => {
-            icon.textContent = '✓';
-            line.classList.remove('is-running');
-          });
-        }
-      }
-
-      ScrollTrigger.create({
-        trigger: '.terminal',
-        start: 'top 72%',
-        once: true,
-        onEnter: () => void tl.play(),
-      });
+      this.replay.set('wait');
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry?.isIntersecting) return;
+          this.replay.set('play');
+          observer.disconnect();
+        },
+        { threshold: 0.4 },
+      );
+      observer.observe(el);
+      destroyRef.onDestroy(() => observer.disconnect());
     });
   }
 }

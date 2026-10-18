@@ -11,11 +11,12 @@ import {
   SiteContent,
 } from '../content';
 
-const FONT_SUBSET: Record<Lang, string> = { ru: 'cyrillic', en: 'latin' };
+/** Onest subsets the first screen needs: Russian text mixes Cyrillic with Latin (Angular, INSAPP, digits). */
+const FONT_SUBSETS: Record<Lang, readonly string[]> = { ru: ['cyrillic', 'latin'], en: ['latin'] };
 
 /**
  * Head tags for a language version: title, description, Open Graph, canonical + hreflang,
- * JSON-LD Person and preloads of the font subset the page starts with. Runs during prerender,
+ * JSON-LD Person and preloads of the font subsets the page starts with. Runs during prerender,
  * so the static HTML already carries all of it; on the client it only finds the same tags.
  */
 @Service()
@@ -66,14 +67,13 @@ export class Seo {
       href: SITE_URL + LANG_PATH.ru,
     });
 
-    const subset = FONT_SUBSET[c.lang];
-    for (const font of ['unbounded']) {
-      this.link(`font-${font}`, {
+    for (const subset of FONT_SUBSETS[c.lang]) {
+      this.link(`font-${subset}`, {
         rel: 'preload',
         as: 'font',
         type: 'font/woff2',
         crossorigin: '',
-        href: `/fonts/${font}-${subset}-wght-normal.woff2`,
+        href: `/fonts/onest-${subset}-wght-normal.woff2`,
       });
     }
 
@@ -97,7 +97,7 @@ export class Seo {
       '@type': 'Person',
       name: `${c.hero.firstName} ${c.hero.lastName}`,
       alternateName: c.lang === 'ru' ? 'Ivan Damaskin' : 'Иван Дамаскин',
-      jobTitle: c.hero.eyebrow,
+      jobTitle: c.hero.role,
       description: c.meta.description,
       url,
       image,

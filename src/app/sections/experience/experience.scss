@@ -1,274 +1,297 @@
-:host {
-  display: block;
+// ---------- Timeline ----------
+
+.timeline {
+  --label-w: 10.5rem;
+  margin-top: clamp(32px, 4vw, 48px);
+  padding: 20px 24px 24px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--line);
+
+  @media (max-width: 599px) {
+    --label-w: 6.75rem;
+    padding: 16px 14px 18px;
+  }
 }
 
-.experience__title {
-  font-size: clamp(2rem, 6vw, 5.75rem);
-  font-weight: 700;
+.timeline__caption {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.timeline__axis {
+  position: relative;
+  height: 20px;
+  margin: 12px 0 6px var(--label-w);
+}
+
+.tick {
+  position: absolute;
+  bottom: 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
   line-height: 1;
-  letter-spacing: -0.04em;
-  white-space: nowrap;
+  color: var(--fg-dim);
+  transform: translateX(-50%);
+
+  @media (max-width: 899px) {
+    &--minor {
+      display: none;
+    }
+  }
 }
 
-.jobs {
-  margin-top: clamp(48px, 7vw, 104px);
-}
-
-// ---------- One commit ----------
-
-.job {
-  // graph geometry: lane x positions and the y of the commit dot
-  --x0: 11px;
-  --x1: 37px;
-  --dot-y: 21px;
-  --p: 1;
-  --gap: clamp(56px, 7vw, 104px);
-
+.timeline__rows {
   position: relative;
+
+  // Year gridlines across the track area.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 0 var(--label-w);
+    background: repeating-linear-gradient(
+      90deg,
+      var(--line) 0 1px,
+      transparent 1px calc(100% / var(--years))
+    );
+    pointer-events: none;
+  }
+}
+
+.trow {
   display: grid;
-  grid-template-columns: 56px minmax(150px, 230px) minmax(0, 1fr);
-  column-gap: clamp(16px, 3vw, 48px);
-  padding-bottom: var(--gap);
+  grid-template-columns: var(--label-w) minmax(0, 1fr);
+  align-items: center;
+  min-height: 44px;
 
-  &:last-child {
-    --gap: 8px;
-  }
-
-  @media (max-width: 899px) {
-    --x0: 9px;
-    --x1: 29px;
-    --dot-y: 10px;
-    grid-template-columns: 40px minmax(0, 1fr);
-    row-gap: 14px;
+  & + & {
+    border-top: 1px dashed var(--line);
   }
 }
 
-.job__graph {
+.trow__label {
+  display: flex;
+  flex-direction: column;
+  padding-right: 12px;
+  line-height: 1.25;
+
+  &:hover .trow__company {
+    color: var(--accent);
+  }
+}
+
+.trow__company {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  transition: color 0.2s;
+
+  @media (max-width: 599px) {
+    font-size: 0.8125rem;
+  }
+}
+
+.trow__years {
+  font-size: 0.6875rem;
+  color: var(--fg-dim);
+}
+
+.trow__track {
   position: relative;
-  grid-column: 1;
-  grid-row: 1;
-  // reach through the row's bottom padding so the lanes connect to the next commit
-  margin-bottom: calc(var(--gap) * -1);
-
-  @media (max-width: 899px) {
-    grid-row: span 2;
-  }
+  height: 14px;
 }
 
-.lane {
+.trow__bar {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: var(--x0);
-  width: 2px;
-  margin-left: -1px;
-  background: var(--line-strong);
+  min-width: 6px;
+  border-radius: 4px;
+  background: var(--bar);
+  transform-origin: left center;
 
-  // the coloured line that draws itself as the row scrolls by
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, var(--accent), var(--accent-2));
-    transform: scaleY(var(--p));
-    transform-origin: 50% 0;
+  // Current jobs run up to today and keep going: solid accent with a soft trailing edge.
+  &--now {
+    background: linear-gradient(
+      90deg,
+      var(--accent) 80%,
+      color-mix(in srgb, var(--accent) 35%, transparent)
+    );
   }
 
-  &--1 {
-    left: var(--x1);
-
-    &::after {
-      background: var(--accent-2);
-    }
-  }
-
-  &--from-dot {
-    top: var(--dot-y);
-  }
-
-  &--to-dot,
-  &--fork {
-    bottom: auto;
-    height: var(--dot-y);
-  }
-
-  &--fork-down {
-    top: var(--dot-y);
-    bottom: 24px;
-  }
-}
-
-// The branch bends back into the main line where it was forked
-.fork-curve {
-  position: absolute;
-  left: calc(var(--x0) - 1px);
-  bottom: 0;
-  width: calc(var(--x1) - var(--x0) + 2px);
-  height: 26px;
-  border: solid var(--line-strong);
-  border-width: 0 2px 2px 0;
-  border-bottom-right-radius: 16px;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0 -2px -2px 0;
-    border: solid var(--accent-2);
-    border-width: 0 2px 2px 0;
-    border-bottom-right-radius: 16px;
-    opacity: clamp(0, (var(--p) - 0.8) * 5, 1);
-  }
-}
-
-.job__dot {
-  position: absolute;
-  z-index: 1;
-  top: var(--dot-y);
-  left: calc(var(--x0) + var(--lane) * (var(--x1) - var(--x0)));
-  width: 13px;
-  height: 13px;
-  margin: -6.5px 0 0 -6.5px;
-  border: 2px solid var(--fg-muted);
-  border-radius: 50%;
-  background: var(--bg);
-
-  .job--current & {
-    border-color: var(--accent);
-    background: var(--accent);
-    box-shadow: 0 0 0 5px var(--accent-soft);
-
-    &::after {
-      content: '';
-      position: absolute;
-      inset: -8px;
-      border: 1px solid var(--accent);
-      border-radius: 50%;
-      animation: ring 2.4s var(--ease-out) infinite;
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: grow linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 45%;
     }
   }
 }
 
-@keyframes ring {
-  0% {
-    transform: scale(0.5);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.6);
-    opacity: 0;
+@keyframes grow {
+  from {
+    transform: scaleX(0);
   }
 }
 
-// ---------- Text ----------
+// ---------- Jobs ----------
 
-.job__meta {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding-top: 8px;
-  font-size: 0.8125rem;
-  color: var(--fg-muted);
+.jobs {
+  margin-top: clamp(40px, 5vw, 64px);
+}
 
-  @media (max-width: 899px) {
-    grid-column: 2;
-    flex-flow: row wrap;
-    gap: 4px 14px;
+.job {
+  padding-block: clamp(28px, 3.5vw, 40px);
+  border-top: 1px solid var(--line);
+  scroll-margin-top: calc(var(--header-h) + 16px);
+
+  &:first-child {
+    border-top: 0;
     padding-top: 0;
   }
 }
 
-.job__hash {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  color: var(--fg-dim);
-}
-
 .job__head {
-  padding: 2px 8px;
-  border: 1px solid var(--accent);
-  border-radius: 6px;
-  color: var(--accent);
-  font-size: 0.6875rem;
-  white-space: nowrap;
-}
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'company period'
+    'role period';
+  column-gap: 24px;
+  align-items: baseline;
 
-.job__range {
-  color: var(--fg);
-}
-
-.job__body {
-  min-width: 0;
-
-  @media (max-width: 899px) {
-    grid-column: 2;
+  @media (max-width: 699px) {
+    grid-template-columns: 1fr;
+    grid-template-areas: 'company' 'role' 'period';
   }
 }
 
 .job__company {
-  font-size: clamp(1.75rem, 3.4vw, 3rem);
-  line-height: 1.05;
+  grid-area: company;
+  font-size: clamp(1.375rem, 1.1rem + 0.8vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
 }
 
 .job__role {
-  margin-top: 8px;
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-  color: var(--accent);
+  grid-area: role;
+  margin-top: 2px;
+  color: var(--fg-muted);
+}
+
+.job__period {
+  grid-area: period;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+
+  @media (max-width: 699px) {
+    margin-top: 8px;
+  }
+}
+
+.job__duration {
+  color: var(--fg-dim);
+}
+
+.job__live {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 .job__summary {
-  max-width: 62ch;
-  margin-top: 18px;
-  font-size: 1.125rem;
-  line-height: 1.6;
+  max-width: 68ch;
+  margin-top: 16px;
+  text-wrap: pretty;
 }
 
 .job__points {
   display: grid;
-  gap: 14px;
+  gap: 10px;
   max-width: 72ch;
-  margin-top: 22px;
+  margin-top: 16px;
 
   li {
     position: relative;
-    padding-left: 26px;
+    padding-left: 22px;
     color: var(--fg-muted);
-    line-height: 1.6;
+    text-wrap: pretty;
 
     &::before {
       content: '';
       position: absolute;
-      left: 0;
-      top: 0.8em;
-      width: 12px;
-      height: 1px;
+      left: 2px;
+      top: 0.78em;
+      width: 10px;
+      height: 1.5px;
       background: var(--accent);
     }
   }
 }
 
 .job__stack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
 .education {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 24px;
-  margin-top: clamp(56px, 7vw, 96px);
-  padding-top: 24px;
+  display: grid;
+  gap: 4px;
+  padding-top: 28px;
   border-top: 1px solid var(--line);
-  color: var(--fg-muted);
+
+  @media (min-width: 700px) {
+    grid-template-columns: 10.5rem minmax(0, 1fr);
+    gap: 24px;
+  }
 }
 
 .education__label {
-  font-size: 0.8125rem;
-  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--accent);
+  line-height: 2.1;
+  color: var(--fg-dim);
+}
+
+@media print {
+  .timeline {
+    margin-top: 10pt;
+    padding: 8pt 10pt;
+    box-shadow: 0 0 0 1px var(--line);
+    break-inside: avoid;
+  }
+
+  .trow {
+    min-height: 24pt;
+  }
+
+  .trow__bar {
+    animation: none !important;
+    print-color-adjust: exact;
+  }
+
+  .jobs {
+    margin-top: 12pt;
+  }
+
+  .job {
+    padding-block: 10pt;
+  }
+
+  .job__head,
+  .job__points li {
+    break-inside: avoid;
+    break-after: avoid;
+  }
+
+  .job__points li {
+    break-after: auto;
+  }
 }

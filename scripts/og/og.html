@@ -1,27 +1,22 @@
 <!doctype html>
-<!-- Open Graph card, 1200×630. Rendered to public/og/og-{ru,en}.png with any headless Chrome:
-     open og.html?lang=ru (or en) at 1200×630 and take a screenshot. -->
+<!-- Open Graph card, 1200×630. Rendered to public/og/og-{ru,en}.png with any headless Chrome, e.g.:
+     chrome --headless=new --hide-scrollbars --window-size=1200,630 --virtual-time-budget=3000 \
+       --screenshot=public/og/og-ru.png "file:///…/scripts/og/og.html?lang=ru"                    -->
 <html>
   <head>
     <meta charset="utf-8" />
     <style>
       @font-face {
-        font-family: U;
-        src: url('../../public/fonts/unbounded-cyrillic-wght-normal.woff2');
+        font-family: O;
+        src: url('../../public/fonts/onest-cyrillic-wght-normal.woff2');
         unicode-range: U+0400-045F;
-        font-weight: 200 900;
+        font-weight: 100 900;
       }
       @font-face {
-        font-family: U;
-        src: url('../../public/fonts/unbounded-latin-wght-normal.woff2');
-        unicode-range: U+0000-00FF, U+2000-206F;
-        font-weight: 200 900;
-      }
-      @font-face {
-        font-family: M;
-        src: url('../../public/fonts/jetbrains-mono-cyrillic-wght-normal.woff2');
-        unicode-range: U+0400-045F;
-        font-weight: 100 800;
+        font-family: O;
+        src: url('../../public/fonts/onest-latin-wght-normal.woff2');
+        unicode-range: U+0000-00FF, U+2000-206F, U+2190-2193;
+        font-weight: 100 900;
       }
       @font-face {
         font-family: M;
@@ -34,126 +29,137 @@
         margin: 0;
         width: 1200px;
         height: 630px;
-        background: #0a0a0c;
-        color: #ecebe6;
         overflow: hidden;
-      }
-      body {
-        position: relative;
-        font-family: U, sans-serif;
-      }
-      svg.field {
-        position: absolute;
-        inset: 0;
-        mask-image: linear-gradient(90deg, transparent 20%, #000 62%);
+        background: #f5f4ef;
+        color: #16161a;
+        font-family: O, sans-serif;
       }
       .wrap {
         position: absolute;
-        inset: 64px 72px;
+        inset: 60px 72px 56px;
         display: flex;
         flex-direction: column;
       }
       .top {
         display: flex;
+        align-items: center;
         justify-content: space-between;
+      }
+      .site {
         font:
           500 22px M,
           monospace;
-        color: #a3a3ac;
-        letter-spacing: 0.04em;
+        color: #4b4b53;
       }
-      .top b {
-        color: #ff5a36;
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 20px 8px 16px;
+        border: 1.5px solid rgb(22 22 26 / 0.22);
+        border-radius: 999px;
+        font-size: 22px;
         font-weight: 500;
+      }
+      .status i {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: #15803d;
       }
       h1 {
-        margin: auto 0 0;
+        margin: 54px 0 0;
+        font-size: 112px;
         font-weight: 650;
-        font-size: 116px;
-        line-height: 0.92;
+        line-height: 1;
         letter-spacing: -0.045em;
       }
-      h1 span {
-        display: block;
-        padding-left: 0.62em;
-      }
-      h1 i {
-        display: inline-block;
-        width: 0.09em;
-        height: 0.78em;
-        margin-left: 0.08em;
-        background: #ff5a36;
-        vertical-align: -0.02em;
-      }
       .role {
-        margin-top: 28px;
-        font:
-          500 26px M,
-          monospace;
-        color: #ecebe6;
+        margin: 18px 0 0;
+        font-size: 40px;
+        font-weight: 500;
+        letter-spacing: -0.025em;
+        color: #4b4b53;
       }
       .role b {
-        color: #ff5a36;
+        color: #2a42d4;
         font-weight: 500;
+      }
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        margin: auto 0 0;
+        padding: 0;
+        list-style: none;
+        border-top: 1.5px solid rgb(22 22 26 / 0.12);
+      }
+      .metrics li {
+        padding: 22px 20px 0;
+        border-left: 1.5px solid rgb(22 22 26 / 0.12);
+      }
+      .metrics li:first-child {
+        padding-left: 0;
+        border-left: 0;
+      }
+      .metrics b {
+        display: block;
+        font-size: 50px;
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: -0.035em;
+      }
+      .metrics span {
+        display: block;
+        margin-top: 10px;
+        font-size: 20px;
+        line-height: 1.3;
+        color: #4b4b53;
       }
     </style>
   </head>
   <body>
-    <svg class="field" viewBox="0 0 1200 630" aria-hidden="true"></svg>
     <div class="wrap">
       <div class="top">
-        <span><b>&gt;</b> damaskin.dev</span><span id="loc"></span>
+        <span class="site">damaskin.dev</span>
+        <span class="status"><i></i><span id="status"></span></span>
       </div>
       <h1 id="name"></h1>
       <p class="role" id="role"></p>
+      <ul class="metrics" id="metrics"></ul>
     </div>
     <script>
       const lang = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'ru';
       const t = {
         ru: {
-          first: 'Иван',
-          last: 'Дамаскин',
-          role: 'Fullstack-разработчик <b>·</b> Angular / Node.js <b>·</b> AI',
-          loc: 'Москва · удалённо',
+          name: 'Иван Дамаскин',
+          role: 'Fullstack-разработчик <b>·</b> Angular / Node.js',
+          status: 'Открыт к предложениям',
+          metrics: [
+            ['11+', 'лет в коммерческой веб-разработке'],
+            ['8', 'продуктов во фронтенде INSAPP'],
+            ['180+', 'партнёрских лендингов и виджетов'],
+            ['11 → 22', 'Angular: миграция продуктовой линейки'],
+          ],
         },
         en: {
-          first: 'Ivan',
-          last: 'Damaskin',
-          role: 'Fullstack developer <b>·</b> Angular / Node.js <b>·</b> AI',
-          loc: 'Moscow · remote',
+          name: 'Ivan Damaskin',
+          role: 'Fullstack developer <b>·</b> Angular / Node.js',
+          status: 'Open to offers',
+          metrics: [
+            ['11+', 'years of commercial web development'],
+            ['8', 'products in the INSAPP frontend'],
+            ['180+', 'partner landings and widgets'],
+            ['11 → 22', 'Angular: product line migration'],
+          ],
         },
       }[lang];
-      document.getElementById('name').innerHTML = `${t.first}<span>${t.last}<i></i></span>`;
+      document.documentElement.lang = lang;
+      document.getElementById('name').textContent = t.name;
       document.getElementById('role').innerHTML = t.role;
-      document.getElementById('loc').textContent = t.loc;
-      // Ridgelines, the same idea as the hero shader
-      const svg = document.querySelector('svg');
-      let seed = 7;
-      const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-      const rows = 26,
-        paths = [];
-      for (let j = rows; j >= 0; j--) {
-        const base = 600 - j * 19;
-        let d = '';
-        const bumps = Array.from({ length: 5 }, () => [
-          760 + rnd() * 380,
-          20 + rnd() * 40,
-          rnd() * 70,
-        ]);
-        for (let x = 0; x <= 1200; x += 6) {
-          let h = 0;
-          for (const [c, w, a] of bumps) h += a * Math.exp(-(((x - c) / w) ** 2));
-          h *= Math.exp(-(((x - 900) / 260) ** 2)) * 1.4;
-          d += `${x ? 'L' : 'M'}${x},${(base - h).toFixed(1)}`;
-        }
-        const heat = Math.min(1, bumps.reduce((s, b) => s + b[2], 0) / 260);
-        const color = heat > 0.72 ? '#ff5a36' : 'rgba(236,235,230,.4)';
-        paths.push(
-          `<path d="${d} L1200,630 L0,630 Z" fill="#0a0a0c" stroke="${color}" stroke-width="1.4" opacity="${0.35 + 0.65 * (1 - j / rows)}"/>`,
-        );
-      }
-      svg.innerHTML = paths.join('');
-      document.fonts.ready.then(() => document.body.setAttribute('data-ready', '1'));
+      document.getElementById('status').textContent = t.status;
+      document.getElementById('metrics').innerHTML = t.metrics
+        .map(([v, l]) => `<li><b>${v}</b><span>${l}</span></li>`)
+        .join('');
     </script>
   </body>
 </html>

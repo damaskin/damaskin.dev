@@ -49,3 +49,54 @@ export function formatPeriod(
     duration: formatDuration(monthsBetween(job.start, end), c),
   };
 }
+
+export interface TimelineBar {
+  readonly job: Job;
+  /** Position and length on the axis, in percent of its width. */
+  readonly left: number;
+  readonly width: number;
+  readonly from: string;
+  readonly to: string;
+}
+
+export interface TimelineTick {
+  readonly year: number;
+  /** Middle of the year on the axis, in percent — where its label goes. */
+  readonly left: number;
+  /** Labels that stay on narrow screens: the first year and every third one after it. */
+  readonly major: boolean;
+}
+
+/**
+ * Career as a Gantt chart: the axis runs from January of the first job's year to the end of
+ * the current year, each job is a bar from its first to its last month (current jobs — up to `now`).
+ */
+export function buildTimeline(
+  jobs: readonly Job[],
+  c: SiteContent,
+  now: Date,
+): { bars: TimelineBar[]; ticks: TimelineTick[] } {
+  const first = Math.min(...jobs.map((j) => parseMonth(j.start).year));
+  const last = now.getFullYear();
+  const total = (last - first + 1) * 12;
+  const offset = (iso: string) => {
+    const { year, month } = parseMonth(iso);
+    return (year - first) * 12 + month - 1;
+  };
+  const pct = (months: number) => Math.round((months / total) * 10000) / 100;
+  const nowIso = toIsoMonth(now);
+
+  const bars = jobs.map((job) => ({
+    job,
+    left: pct(offset(job.start)),
+    width: pct(monthsBetween(job.start, job.end ?? nowIso)),
+    from: job.start.slice(0, 4),
+    to: job.end ? job.end.slice(0, 4) : c.experience.present,
+  }));
+  const ticks = Array.from({ length: last - first + 1 }, (_, i) => ({
+    year: first + i,
+    left: pct(i * 12 + 6),
+    major: i % 3 === 0,
+  }));
+  return { bars, ticks };
+}

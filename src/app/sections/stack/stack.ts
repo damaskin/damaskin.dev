@@ -1,79 +1,72 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { SiteContent } from '../../content';
-import { useMotion } from '../../core/motion';
 
 @Component({
   selector: 'dd-stack',
   template: `
     @let s = content().stack;
-    <div class="container">
-      <p class="section-head">
-        <span class="section-head__index">{{ s.index }}</span
-        >{{ s.label }}
-      </p>
-      <h2 class="display h2" data-reveal>{{ s.title }}</h2>
-    </div>
-
-    <div class="marquee" aria-hidden="true">
-      @for (row of rows(); track $index; let odd = $odd) {
-        <div class="marquee__row" [class.marquee__row--reverse]="odd">
-          @for (copy of [0, 1]; track copy) {
-            <ul class="marquee__set">
-              @for (item of row; track item) {
-                <li class="display">{{ item }}<span class="marquee__sep">✦</span></li>
-              }
-            </ul>
-          }
-        </div>
-      }
-    </div>
-
-    <div class="container">
-      <ul class="groups">
-        @for (group of s.groups; track group.title; let i = $index) {
-          <li class="group" data-reveal>
-            <div class="group__head">
-              <span class="group__idx mono" aria-hidden="true">{{ s.index }}.{{ i + 1 }}</span>
-              <h3 class="group__title">{{ group.title }}</h3>
-            </div>
-            <ul class="group__items">
-              @for (item of group.items; track item) {
-                <li class="chip">{{ item }}</li>
-              }
-            </ul>
-          </li>
+    <div class="container section__grid">
+      <header class="section__label">
+        <span class="section__index" aria-hidden="true">{{ s.index }}</span>
+        <h2 class="section__title">{{ s.label }}</h2>
+      </header>
+      <dl class="groups">
+        @for (group of s.groups; track group.title) {
+          <div class="group reveal">
+            <dt class="group__title mono">{{ group.title }}</dt>
+            <dd>
+              <ul class="group__items">
+                @for (item of group.items; track item) {
+                  <li>{{ item }}</li>
+                }
+              </ul>
+            </dd>
+          </div>
         }
-      </ul>
+      </dl>
     </div>
   `,
-  styleUrl: './stack.scss',
-  host: { class: 'section stack', id: 'stack' },
+  styles: `
+    .group {
+      display: grid;
+      gap: 6px;
+      padding-block: 18px;
+      border-top: 1px solid var(--line);
+
+      &:first-child {
+        border-top: 0;
+        padding-top: 4px;
+      }
+
+      @media (min-width: 700px) {
+        grid-template-columns: 10.5rem minmax(0, 1fr);
+        gap: 24px;
+      }
+    }
+
+    .group__title {
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 2.2;
+      color: var(--accent);
+    }
+
+    .group__items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px 0;
+      font-size: 1.0625rem;
+
+      li:not(:last-child)::after {
+        content: '·';
+        margin-inline: 10px;
+        color: var(--fg-dim);
+      }
+    }
+  `,
+  host: { class: 'section', id: 'stack' },
 })
 export class Stack {
   readonly content = input.required<SiteContent>();
-
-  /** Two marquee rows: frontend + mobile + AI one way, backend + devops + integrations the other. */
-  protected readonly rows = computed(() => {
-    const g = this.content().stack.groups;
-    const pick = (idx: number[]) => idx.flatMap((i) => g[i]?.items.slice(0, 6) ?? []);
-    return [pick([0, 2, 3]), pick([1, 4, 5])];
-  });
-
-  constructor() {
-    // Scrolling nudges the marquee rows in opposite directions on top of their own drift.
-    useMotion(({ gsap, reduced }, host) => {
-      if (reduced) return;
-      gsap.utils.toArray<HTMLElement>('.marquee__row', host).forEach((row, i) => {
-        gsap.fromTo(
-          row,
-          { xPercent: i % 2 ? -8 : 0 },
-          {
-            xPercent: i % 2 ? 0 : -8,
-            ease: 'none',
-            scrollTrigger: { trigger: row, start: 'top bottom', end: 'bottom top', scrub: true },
-          },
-        );
-      });
-    });
-  }
 }

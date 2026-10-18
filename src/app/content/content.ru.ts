@@ -16,6 +16,7 @@ export const RU: SiteContent = {
     skip: 'Перейти к содержанию',
     nav: 'Основная навигация',
     langSwitch: 'English version',
+    theme: 'Сменить тему оформления',
     opensInNewTab: 'откроется в новой вкладке',
     copied: 'Адрес скопирован',
     copy: 'Скопировать адрес почты',
@@ -30,7 +31,7 @@ export const RU: SiteContent = {
   cvLabel: 'CV.pdf',
   cvHref: CV_PATH,
   hero: {
-    eyebrow: 'Fullstack-разработчик · Angular / Node.js',
+    role: 'Fullstack-разработчик · Angular / Node.js',
     firstName: 'Иван',
     lastName: 'Дамаскин',
     lead:
@@ -40,13 +41,12 @@ export const RU: SiteContent = {
     location: 'Москва · удалённо · готов к командировкам',
     primaryCta: 'Написать',
     secondaryCta: 'Скачать CV',
-    scroll: 'Листайте',
   },
   metrics: [
-    { value: 11, suffix: '+', label: 'лет в коммерческой веб-разработке' },
-    { value: 8, label: 'продуктов во фронтенде insurtech-платформы INSAPP' },
-    { value: 180, suffix: '+', label: 'партнёрских лендингов и виджетов' },
-    { value: 22, from: 11, prefix: '11 → ', label: 'Angular: миграция продуктовой линейки' },
+    { value: '11+', label: 'лет в коммерческой веб-разработке' },
+    { value: '8', label: 'продуктов во фронтенде insurtech-платформы INSAPP' },
+    { value: '180+', label: 'партнёрских лендингов и виджетов на одной кодовой базе' },
+    { value: '11 → 22', label: 'Angular: миграция продуктовой линейки' },
   ],
   about: {
     index: '01',
@@ -67,7 +67,8 @@ export const RU: SiteContent = {
   experience: {
     index: '02',
     label: 'Опыт',
-    title: 'git log --graph',
+    title: '11+ лет в коммерческой веб-разработке, почти пять из них — в insurtech.',
+    timelineLabel: 'Карьера по годам',
     present: 'н. в.',
     stackLabel: 'Стек',
     jobs: [
@@ -77,7 +78,6 @@ export const RU: SiteContent = {
         role: 'Frontend-разработчик',
         start: '2021-12',
         end: null,
-        lane: 0,
         summary:
           'Insurtech-платформа: страховые и финансовые продукты, которые банки, маркетплейсы и сервисы встраивают к себе в виде лендингов и виджетов.',
         points: [
@@ -96,7 +96,6 @@ export const RU: SiteContent = {
         role: 'Frontend-разработчик',
         start: '2018-07',
         end: null,
-        lane: 1,
         summary:
           'Разработка веб-сервисов и сайтов для заказчиков: от UX/UI-прототипа до продакшена.',
         points: [
@@ -112,7 +111,6 @@ export const RU: SiteContent = {
         role: 'Frontend-разработчик',
         start: '2015-02',
         end: '2017-06',
-        lane: 0,
         summary:
           'Разработка клиентской части веб-проектов: SPA, адаптивная вёрстка, интеграция с REST API.',
         points: [],
@@ -124,7 +122,6 @@ export const RU: SiteContent = {
         role: 'Frontend-разработчик',
         start: '2013-09',
         end: '2014-07',
-        lane: 0,
         summary: 'Вёрстка и клиентский JavaScript для фотохостинга.',
         points: [],
         stack: STACK.radikal,
@@ -139,8 +136,6 @@ export const RU: SiteContent = {
     index: '03',
     label: 'Проекты',
     title: 'Сделано и работает',
-    hint: 'Листайте — проекты едут вбок',
-    open: 'Открыть',
     items: [
       {
         id: 'topbarber',
@@ -263,7 +258,6 @@ export const RU: SiteContent = {
   stack: {
     index: '05',
     label: 'Стек',
-    title: 'Инструменты',
     groups: [
       {
         title: 'Frontend',
@@ -341,7 +335,7 @@ export const RU: SiteContent = {
     ],
   },
   footer: {
-    builtWith: 'Angular 22 · SSG · Signals · GSAP · WebGL',
+    builtWith: 'Angular 22 · SSG · Signals · zoneless',
     source: 'Исходники на GitHub',
     build: 'сборка',
   },

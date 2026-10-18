@@ -2,69 +2,71 @@
 
 <a class="skip-link" href="#main">{{ c.a11y.skip }}</a>
 
-<div class="site-header__bg" aria-hidden="true"></div>
+<div class="bar container">
+  <a class="brand" [href]="homeHref()">{{ c.hero.firstName }} {{ c.hero.lastName }}</a>
 
-<div class="site-header__bar container">
-  <a class="site-header__logo" [href]="homeHref()" data-cursor>
-    <span class="site-header__mark" aria-hidden="true">ID</span>
-    <span class="site-header__domain mono">damaskin<span class="accent">.dev</span></span>
-  </a>
-
-  <nav class="site-header__nav" [attr.aria-label]="c.a11y.nav">
+  <nav class="nav" [attr.aria-label]="c.a11y.nav">
     <ul>
       @for (item of c.nav; track item.href) {
         <li>
-          <a [href]="item.href" (click)="go($event, item.href)">{{ item.label }}</a>
+          <a
+            [href]="item.href"
+            [class.is-active]="active() === item.href"
+            [attr.aria-current]="active() === item.href ? 'true' : null"
+            >{{ item.label }}</a
+          >
         </li>
       }
     </ul>
   </nav>
 
-  <div class="site-header__tools">
+  <div class="tools">
     <a
-      class="site-header__lang mono"
+      class="tool lang mono"
       [href]="otherLangHref()"
-      [attr.hreflang]="c.lang === 'ru' ? 'en' : 'ru'"
+      [attr.hreflang]="otherLang()"
+      [attr.lang]="otherLang()"
       [attr.aria-label]="c.a11y.langSwitch"
-      >{{ otherLangLabel() }}</a
+      >{{ otherLang().toUpperCase() }}</a
     >
-    <a class="site-header__cv mono" [href]="c.cvHref" download="Ivan_Damaskin_CV.pdf">
+    <button class="tool" type="button" [attr.aria-label]="c.a11y.theme" (click)="toggleTheme()">
+      <svg viewBox="0 0 20 20" aria-hidden="true">
+        <circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+        <path d="M10 3.5a6.5 6.5 0 0 1 0 13z" fill="currentColor" />
+      </svg>
+    </button>
+    <a class="btn btn--sm cv" [href]="c.cvHref" download="Ivan_Damaskin_CV.pdf">
       {{ c.cvLabel }}
       <svg viewBox="0 0 16 16" aria-hidden="true">
         <path d="M8 2v9M4 7l4 4 4-4M3 14h10" fill="none" stroke="currentColor" stroke-width="1.6" />
       </svg>
     </a>
     <button
-      class="site-header__burger"
+      class="tool burger"
       type="button"
       [attr.aria-expanded]="menuOpen()"
       aria-controls="mobile-menu"
-      (click)="toggleMenu()"
+      (click)="menuOpen.set(!menuOpen())"
     >
       <span class="sr-only">{{ c.a11y.menu }}</span>
-      <span class="site-header__burger-line" aria-hidden="true"></span>
-      <span class="site-header__burger-line" aria-hidden="true"></span>
+      <span class="burger__line burger__line--top" aria-hidden="true"></span>
+      <span class="burger__line burger__line--bottom" aria-hidden="true"></span>
     </button>
   </div>
-
-  <div class="site-header__progress" aria-hidden="true"></div>
 </div>
 
-<div class="mobile-menu" id="mobile-menu" [attr.inert]="menuOpen() ? null : ''">
-  <nav [attr.aria-label]="c.a11y.nav">
-    <ul class="mobile-menu__list">
-      @for (item of c.nav; track item.href; let i = $index) {
-        <li [style.--i]="i">
-          <a class="display" [href]="item.href" (click)="go($event, item.href)">
-            <span class="mobile-menu__idx mono">0{{ i + 2 }}</span
-            >{{ item.label }}
-          </a>
+<div class="menu" id="mobile-menu" [attr.inert]="menuOpen() ? null : ''">
+  <nav class="container" [attr.aria-label]="c.a11y.nav">
+    <ul class="menu__list">
+      @for (item of c.nav; track item.href) {
+        <li>
+          <a [href]="item.href" (click)="menuOpen.set(false)">{{ item.label }}</a>
         </li>
       }
     </ul>
+    <p class="menu__foot mono">
+      <a [href]="'mailto:' + c.contact.email">{{ c.contact.email }}</a>
+      <a [href]="c.cvHref" download="Ivan_Damaskin_CV.pdf">{{ c.cvLabel }}</a>
+    </p>
   </nav>
-  <div class="mobile-menu__foot mono">
-    <a [href]="'mailto:' + c.contact.email">{{ c.contact.email }}</a>
-    <a [href]="c.cvHref" download="Ivan_Damaskin_CV.pdf">{{ c.cvLabel }}</a>
-  </div>
 </div>

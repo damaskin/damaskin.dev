@@ -1,32 +1,65 @@
 @use 'styles/fonts';
 
-:root {
+// ---------- Tokens ----------
+// Light "paper" theme by default; dark follows the system unless the visitor picked a theme
+// (data-theme on <html>, set before the first paint by the inline script in index.html).
+
+@mixin dark-tokens {
   color-scheme: dark;
+  --bg: #111113;
+  --bg-soft: #17171a;
+  --surface: #1a1a1e;
+  --fg: #ededea;
+  --fg-muted: #b0b0b7;
+  --fg-dim: #8f8f97;
+  --line: rgb(237 237 234 / 0.1);
+  --line-strong: rgb(237 237 234 / 0.2);
+  --accent: #9aa7ff;
+  --on-accent: #111113;
+  --accent-soft: rgb(154 167 255 / 0.13);
+  --ok: #4ade80;
+  --bar: #4b4b54;
+  --shadow: 0 0 0 1px var(--line), 0 24px 48px -28px rgb(0 0 0 / 0.7);
+}
 
-  --bg: #0a0a0c;
-  --bg-2: #101015;
-  --surface: #15151b;
-  --surface-2: #1c1c24;
-  --line: rgb(236 235 230 / 0.1);
-  --line-strong: rgb(236 235 230 / 0.22);
-  --fg: #ecebe6;
-  --fg-muted: #a3a3ac;
-  --fg-dim: #84848e;
-  --accent: #ff5a36;
-  --accent-soft: rgb(255 90 54 / 0.14);
-  --accent-2: #ffb36b;
-  --on-accent: #0a0a0c;
+:root {
+  color-scheme: light;
+  --bg: #f5f4ef;
+  --bg-soft: #edebe4;
+  --surface: #fcfbf8;
+  --fg: #16161a;
+  --fg-muted: #4b4b53;
+  --fg-dim: #66666e;
+  --line: rgb(22 22 26 / 0.1);
+  --line-strong: rgb(22 22 26 / 0.22);
+  --accent: #2a42d4;
+  --on-accent: #ffffff;
+  --accent-soft: rgb(42 66 212 / 0.08);
+  --ok: #15803d;
+  --bar: #c3c1b8;
+  --shadow: 0 0 0 1px var(--line), 0 24px 48px -30px rgb(22 22 26 / 0.35);
 
-  --font-display: 'Unbounded Variable', 'Arial Black', system-ui, sans-serif;
-  --font-body: 'Onest Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Onest Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', Consolas, monospace;
 
-  --gutter: clamp(16px, 4vw, 56px);
-  --maxw: 1440px;
-  --header-h: 72px;
-  --radius: 18px;
+  --gutter: clamp(16px, 4vw, 48px);
+  --maxw: 1240px;
+  --header-h: 64px;
+  --radius: 14px;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    @include dark-tokens;
+  }
+}
+
+:root[data-theme='dark'] {
+  @include dark-tokens;
+}
+
+// ---------- Base ----------
 
 *,
 *::before,
@@ -37,18 +70,17 @@
 html {
   background: var(--bg);
   color: var(--fg);
-  font-family: var(--font-body);
+  font-family: var(--font-sans);
   font-size: 100%;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
   -webkit-text-size-adjust: 100%;
-  scroll-padding-top: var(--header-h);
-}
+  scroll-padding-top: calc(var(--header-h) + 16px);
 
-html:not(.lenis) {
-  scroll-behavior: smooth;
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
@@ -56,23 +88,11 @@ body {
   min-height: 100vh;
   background: var(--bg);
   overflow-x: clip;
-}
-
-// Lenis
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-.lenis.lenis-stopped {
-  overflow: hidden;
+  font-size: 1.0625rem;
 }
 
 img,
 svg,
-canvas,
 picture {
   display: block;
   max-width: 100%;
@@ -148,44 +168,7 @@ ol {
   }
 }
 
-// Film grain over everything: one SVG noise tile, nudged with steps() so it costs nothing.
-body::after {
-  content: '';
-  position: fixed;
-  inset: -50%;
-  z-index: 900;
-  pointer-events: none;
-  opacity: 0.055;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation: grain 1.2s steps(6) infinite;
-
-  @media (pointer: coarse) {
-    animation: none;
-  }
-}
-
-@keyframes grain {
-  0% {
-    transform: translate(0, 0);
-  }
-  20% {
-    transform: translate(-3%, 2%);
-  }
-  40% {
-    transform: translate(2%, -4%);
-  }
-  60% {
-    transform: translate(-4%, -1%);
-  }
-  80% {
-    transform: translate(3%, 3%);
-  }
-  100% {
-    transform: translate(0, 0);
-  }
-}
-
-// ---------- Shared building blocks (used by several sections) ----------
+// ---------- Shared building blocks ----------
 
 .container {
   width: 100%;
@@ -194,122 +177,126 @@ body::after {
   padding-inline: var(--gutter);
 }
 
-.section {
-  position: relative;
-  padding-block: clamp(96px, 13vw, 200px);
-}
-
-.section-head {
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  margin-bottom: clamp(28px, 4vw, 56px);
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--fg-muted);
-
-  .section-head__index {
-    color: var(--accent);
-  }
-
-  &::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    align-self: center;
-    background: var(--line);
-  }
-}
-
-.display {
-  font-family: var(--font-display);
-  font-weight: 600;
-  line-height: 0.98;
-  letter-spacing: -0.035em;
-  text-wrap: balance;
-}
-
-.h2 {
-  font-size: clamp(2.25rem, 6.2vw, 6rem);
-}
-
 .mono {
   font-family: var(--font-mono);
 }
 
-.chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 12px;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
+// A section of the CV: the label (index + h2) sits in its own column on wide screens and stays in
+// view while the section scrolls by, like the margin headings of a printed résumé.
+.section {
+  display: block;
+  padding-block: clamp(64px, 8vw, 112px);
+  border-top: 1px solid var(--line);
+}
+
+.section__grid {
+  display: grid;
+  gap: 28px;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 56px;
+  }
+}
+
+.section__label {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+
+  @media (min-width: 1024px) {
+    position: sticky;
+    top: calc(var(--header-h) + 36px);
+    align-self: start;
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+.section__index {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--accent);
+}
+
+.section__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.section__lead {
+  max-width: 32ch;
+  font-size: clamp(1.75rem, 1.25rem + 1.6vw, 2.625rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: var(--bg-soft);
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  line-height: 1.3;
+  line-height: 1.5;
   color: var(--fg-muted);
   white-space: nowrap;
-  transition:
-    color 0.25s,
-    border-color 0.25s,
-    background-color 0.25s;
 }
 
 .btn {
-  --btn-bg: transparent;
-  --btn-fg: var(--fg);
-  position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  min-height: 52px;
-  padding: 0 26px;
+  min-height: 48px;
+  padding: 0 22px;
   border: 1px solid var(--line-strong);
   border-radius: 999px;
-  background: var(--btn-bg);
-  color: var(--btn-fg);
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
+  background: transparent;
+  color: var(--fg);
+  font-size: 0.9375rem;
   font-weight: 500;
-  letter-spacing: 0.02em;
+  white-space: nowrap;
   cursor: pointer;
-  overflow: hidden;
-  isolation: isolate;
   transition:
-    color 0.35s var(--ease-out),
-    border-color 0.35s var(--ease-out);
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s,
+    transform 0.2s var(--ease-out);
 
-  // Fill that rises from the bottom on hover
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    background: var(--accent);
-    transform: translateY(101%);
-    transition: transform 0.45s var(--ease-out);
+  &:hover {
+    border-color: var(--fg);
   }
 
-  &:hover,
-  &:focus-visible {
-    color: var(--on-accent);
-    border-color: var(--accent);
-
-    &::before {
-      transform: none;
-    }
+  &:active {
+    transform: translateY(1px);
   }
 
   &--primary {
-    --btn-bg: var(--accent);
-    --btn-fg: var(--on-accent);
     border-color: var(--accent);
+    background: var(--accent);
+    color: var(--on-accent);
 
-    &::before {
+    &:hover {
+      border-color: var(--fg);
       background: var(--fg);
+      color: var(--bg);
     }
+  }
+
+  &--sm {
+    min-height: 36px;
+    padding: 0 14px;
+    font-size: 0.875rem;
   }
 
   svg {
@@ -319,10 +306,50 @@ body::after {
   }
 }
 
-// Elements that animate in are hidden only when JS motion is on (html.motion is set inline in index.html).
-// A watchdog removes the class if GSAP never starts, so content never stays invisible.
-html.motion [data-reveal] {
-  opacity: 0;
+// Inline link with an arrow, for external places (GitHub, hh.ru, live projects).
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--fg);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+  transition:
+    color 0.2s,
+    text-decoration-color 0.2s;
+
+  &:hover {
+    color: var(--accent);
+    text-decoration-color: currentColor;
+  }
+
+  svg {
+    width: 14px;
+    height: 14px;
+    flex: none;
+  }
+}
+
+// Blocks fade up as they scroll into view — pure CSS, only where scroll-driven animations exist,
+// so without support (or with reduced motion) everything is simply there.
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -332,5 +359,98 @@ html.motion [data-reveal] {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+}
+
+// ---------- Print: Ctrl+P gives a clean black-on-white résumé ----------
+
+@media print {
+  :root,
+  :root[data-theme] {
+    color-scheme: light;
+    --bg: #fff;
+    --bg-soft: #f1f1f1;
+    --surface: #fff;
+    --fg: #000;
+    --fg-muted: #333;
+    --fg-dim: #555;
+    --line: #ddd;
+    --line-strong: #bbb;
+    --accent: #000;
+    --bar: #bbb;
+  }
+
+  @page {
+    margin: 14mm 14mm 16mm;
+  }
+
+  html {
+    font-size: 11pt;
+  }
+
+  body {
+    font-size: 10pt;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .section {
+    padding-block: 12pt;
+    break-before: auto;
+  }
+
+  .section__lead {
+    max-width: none;
+    font-size: 15pt;
+  }
+
+  .section__grid {
+    grid-template-columns: 90pt minmax(0, 1fr);
+    gap: 16pt;
+  }
+
+  .section__label {
+    position: static;
+    flex-direction: column;
+  }
+
+  .reveal {
+    animation: none !important;
+  }
+
+  .tag {
+    padding: 0 4pt;
+    background: none;
+    border: 1px solid #ccc;
+  }
+
+  // Buttons and links turn into plain text with the address spelled out.
+  .btn {
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: none !important;
+    color: #000 !important;
+
+    svg {
+      display: none;
+    }
+  }
+
+  a.btn[href^='http']::after,
+  a.link[href^='http']::after {
+    content: ' — ' attr(href);
+    font-weight: 400;
+    font-size: 8pt;
+  }
+}
+
+.print-only {
+  display: none;
+
+  @media print {
+    display: block;
   }
 }

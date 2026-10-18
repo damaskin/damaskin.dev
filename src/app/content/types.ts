@@ -6,11 +6,8 @@ export interface Link {
 }
 
 export interface Metric {
-  /** Number the counter animates to; `from` lets "Angular 11 → 22" tick from 11. */
-  readonly value: number;
-  readonly from?: number;
-  readonly prefix?: string;
-  readonly suffix?: string;
+  /** As shown, e.g. "180+" or "11 → 22". */
+  readonly value: string;
   readonly label: string;
 }
 
@@ -25,8 +22,6 @@ export interface Job {
   readonly summary: string;
   readonly points: readonly string[];
   readonly stack: readonly string[];
-  /** Git-graph lane: 0 — main line, 1 — parallel branch. */
-  readonly lane: 0 | 1;
 }
 
 export interface Project {
@@ -78,6 +73,7 @@ export interface SiteContent {
     readonly skip: string;
     readonly nav: string;
     readonly langSwitch: string;
+    readonly theme: string;
     readonly opensInNewTab: string;
     readonly copied: string;
     readonly copy: string;
@@ -86,15 +82,14 @@ export interface SiteContent {
   readonly cvLabel: string;
   readonly cvHref: string;
   readonly hero: {
-    readonly eyebrow: string;
     readonly firstName: string;
     readonly lastName: string;
+    readonly role: string;
     readonly lead: string;
     readonly status: string;
     readonly location: string;
     readonly primaryCta: string;
     readonly secondaryCta: string;
-    readonly scroll: string;
   };
   readonly metrics: readonly Metric[];
   readonly about: {
@@ -108,6 +103,7 @@ export interface SiteContent {
     readonly index: string;
     readonly label: string;
     readonly title: string;
+    readonly timelineLabel: string;
     readonly present: string;
     readonly stackLabel: string;
     readonly jobs: readonly Job[];
@@ -117,8 +113,6 @@ export interface SiteContent {
     readonly index: string;
     readonly label: string;
     readonly title: string;
-    readonly hint: string;
-    readonly open: string;
     readonly items: readonly Project[];
     readonly clients: { readonly label: string; readonly items: readonly string[] };
   };
@@ -135,7 +129,6 @@ export interface SiteContent {
   readonly stack: {
     readonly index: string;
     readonly label: string;
-    readonly title: string;
     readonly groups: readonly StackGroup[];
   };
   readonly contact: {

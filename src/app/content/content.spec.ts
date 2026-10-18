@@ -5,12 +5,15 @@ const { ru, en } = CONTENT;
 describe('content', () => {
   it('keeps both languages in step: same jobs, projects, metrics and stack groups', () => {
     expect(en.experience.jobs.map((j) => j.id)).toEqual(ru.experience.jobs.map((j) => j.id));
-    expect(en.experience.jobs.map((j) => [j.start, j.end, j.lane])).toEqual(
-      ru.experience.jobs.map((j) => [j.start, j.end, j.lane]),
+    expect(en.experience.jobs.map((j) => [j.start, j.end])).toEqual(
+      ru.experience.jobs.map((j) => [j.start, j.end]),
     );
     expect(en.projects.items.map((p) => p.id)).toEqual(ru.projects.items.map((p) => p.id));
     expect(en.metrics.map((m) => m.value)).toEqual(ru.metrics.map((m) => m.value));
     expect(en.stack.groups.length).toBe(ru.stack.groups.length);
+    expect(en.projects.items.map((p) => [p.url, p.image?.src, p.flow?.length])).toEqual(
+      ru.projects.items.map((p) => [p.url, p.image?.src, p.flow?.length]),
+    );
     expect(en.nav.map((n) => n.href)).toEqual(ru.nav.map((n) => n.href));
   });
 
