@@ -11,8 +11,8 @@ describe('content', () => {
     expect(en.projects.items.map((p) => p.id)).toEqual(ru.projects.items.map((p) => p.id));
     expect(en.metrics.map((m) => m.value)).toEqual(ru.metrics.map((m) => m.value));
     expect(en.stack.groups.length).toBe(ru.stack.groups.length);
-    expect(en.projects.items.map((p) => [p.url, p.image?.src, p.flow?.length])).toEqual(
-      ru.projects.items.map((p) => [p.url, p.image?.src, p.flow?.length]),
+    expect(en.projects.items.map((p) => [p.url, p.image?.src, p.stores])).toEqual(
+      ru.projects.items.map((p) => [p.url, p.image?.src, p.stores]),
     );
     expect(en.nav.map((n) => n.href)).toEqual(ru.nav.map((n) => n.href));
   });

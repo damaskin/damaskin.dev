@@ -24,6 +24,13 @@ export interface Job {
   readonly stack: readonly string[];
 }
 
+export interface StoreLink {
+  readonly store: 'app-store' | 'google-play';
+  /** Store name as written on the button, the same in every language. */
+  readonly label: string;
+  readonly href: string;
+}
+
 export interface Project {
   readonly id: string;
   readonly name: string;
@@ -40,8 +47,8 @@ export interface Project {
     readonly height: number;
     readonly mobileSrc?: string;
   };
-  /** Steps for a project that is shown as a flow instead of a screenshot. */
-  readonly flow?: readonly string[];
+  /** Where the app is published, for projects that have one. */
+  readonly stores?: readonly StoreLink[];
 }
 
 export interface StackGroup {

@@ -1,4 +1,4 @@
-import { CV_PATH, EMAIL, GITHUB_URL, HH_URL, IMAGES, STACK } from './shared';
+import { CV_PATH, EMAIL, GITHUB_URL, HH_URL, IMAGES, STACK, STORES } from './shared';
 import { SiteContent } from './types';
 
 export const EN: SiteContent = {
@@ -166,6 +166,7 @@ export const EN: SiteContent = {
           ...IMAGES.fithorse,
           alt: 'FitHorse app website with the workout recording screen',
         },
+        stores: STORES.fithorse,
       },
       {
         id: 'insapp',
@@ -188,14 +189,43 @@ export const EN: SiteContent = {
         },
       },
       {
-        id: 'svyaz',
-        name: '“Svyaz” widget',
-        kind: 'White-label for banking apps',
+        id: 'takeaway',
+        name: 'takeAway',
+        kind: 'Own product · order ahead, skip the queue',
+        url: 'https://takeaway.md/',
+        urlLabel: 'takeaway.md',
         description:
-          'Selling phone numbers with eSIM right inside a banking app — from the catalogue to signing the contract via Gosuslugi / Goskey. The flow is confirmed by the partner on live orders.',
-        highlights: ['White-label', 'eSIM', 'Gosuslugi / Goskey', 'Live orders'],
-        stack: ['Angular', 'TypeScript', 'eSIM', 'Gosuslugi / Goskey'],
-        flow: ['Catalogue', 'Number', 'eSIM', 'Gosuslugi', 'Contract'],
+          'Customers order ahead, follow the status and pick up a ready order without queuing. One profile and one cart across the iOS and Android apps, the website and a Telegram Mini App; businesses get a dashboard with analytics and a kitchen display.',
+        highlights: [
+          'iOS, Android & web',
+          'Telegram Mini App',
+          'Kitchen display (KDS)',
+          'Poster & iiko POS',
+        ],
+        stack: STACK.takeaway,
+        image: { ...IMAGES.takeaway, alt: 'takeAway website — pre-order at coffee shops nearby' },
+        stores: STORES.takeaway,
+      },
+      {
+        id: 'lunaclean',
+        name: 'Luna Clean',
+        kind: 'Client project · mobile upholstery cleaning',
+        url: 'https://lunaclean.ru/',
+        urlLabel: 'lunaclean.ru',
+        description:
+          'The company had no website, so I built it all end to end: a landing page with a price calculator and online booking into free slots, an app with no sign-up, an admin panel with statistics and a Telegram bot that sends new orders to the cleaner.',
+        highlights: [
+          'Price calculator',
+          'Online booking',
+          'App with no sign-in',
+          'Orders via Telegram bot',
+        ],
+        stack: STACK.lunaclean,
+        image: {
+          ...IMAGES.lunaclean,
+          alt: 'Luna Clean landing page — mobile upholstery cleaning',
+        },
+        stores: STORES.lunaclean,
       },
     ],
     clients: {
@@ -232,20 +262,17 @@ export const EN: SiteContent = {
         text: 'Yandex Tracker, Figma and Swagger are available to agents directly; digests go to Telegram.',
       },
     ],
-    terminalTitle: 'claude — insapp-front',
+    terminalTitle: 'claude — fithorse',
     terminalNote: 'Example session, simplified',
     terminal: [
-      { kind: 'cmd', text: 'claude "take INS-1024: landing for a new OSAGO partner"' },
-      { kind: 'step', tag: 'tracker', text: 'task parsed → product, partner, apiKey, palette' },
-      { kind: 'step', tag: 'git', text: 'branch feature/INS-1024 from develop' },
-      {
-        kind: 'step',
-        tag: 'builder',
-        text: 'landings/osago-partner · fileReplacements · CI stage',
-      },
-      { kind: 'step', tag: 'build', text: 'ng build osago-partner → no errors' },
-      { kind: 'step', tag: 'qa', text: 'desktop / mobile screenshots · console clean' },
-      { kind: 'step', tag: 'tracker', text: 'comment · “Ready for testing” · QA tag' },
+      { kind: 'cmd', text: 'claude "add 5K and 10K personal records to FitHorse"' },
+      { kind: 'step', tag: 'plan', text: 'task broken down → API, app screen, tests' },
+      { kind: 'step', tag: 'git', text: 'branch feature/personal-records from main' },
+      { kind: 'step', tag: 'api', text: 'NestJS · GET /me/records · Prisma migration' },
+      { kind: 'step', tag: 'app', text: 'Flutter · “Records” screen · Riverpod provider' },
+      { kind: 'step', tag: 'test', text: 'jest + flutter test → all green' },
+      { kind: 'step', tag: 'qa', text: 'iOS / Android emulators · screen screenshots' },
+      { kind: 'step', tag: 'pr', text: 'pull request · CI green' },
       { kind: 'ok', text: 'done — over to human review' },
     ],
   },

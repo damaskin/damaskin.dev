@@ -1,4 +1,4 @@
-import { CV_PATH, EMAIL, GITHUB_URL, HH_URL, IMAGES, STACK } from './shared';
+import { CV_PATH, EMAIL, GITHUB_URL, HH_URL, IMAGES, STACK, STORES } from './shared';
 import { SiteContent } from './types';
 
 export const RU: SiteContent = {
@@ -168,6 +168,7 @@ export const RU: SiteContent = {
         highlights: ['iOS + Android', 'GPS и BLE-датчики', 'Health-интеграции', 'Свой бэкенд'],
         stack: STACK.fithorse,
         image: { ...IMAGES.fithorse, alt: 'Сайт приложения FitHorse с экраном записи тренировки' },
+        stores: STORES.fithorse,
       },
       {
         id: 'insapp',
@@ -190,14 +191,40 @@ export const RU: SiteContent = {
         },
       },
       {
-        id: 'svyaz',
-        name: 'Виджет «Связь»',
-        kind: 'White-label для банковских приложений',
+        id: 'takeaway',
+        name: 'takeAway',
+        kind: 'Собственный продукт · предзаказ без очереди',
+        url: 'https://takeaway.md/',
+        urlLabel: 'takeaway.md',
         description:
-          'Продажа номеров с eSIM прямо в приложении банка — от каталога до подписания договора через Госуслуги / Госключ. Путь подтверждён партнёром на живых заказах.',
-        highlights: ['White-label', 'eSIM', 'Госуслуги / Госключ', 'Живые заказы'],
-        stack: ['Angular', 'TypeScript', 'eSIM', 'Госуслуги / Госключ'],
-        flow: ['Каталог', 'Номер', 'eSIM', 'Госуслуги', 'Договор'],
+          'Клиент заказывает заранее, следит за статусом и забирает готовый заказ без очереди. Один профиль и одна корзина в приложениях для iOS и Android, на сайте и в Telegram Mini App; у бизнеса — кабинет с аналитикой и кухонный экран.',
+        highlights: [
+          'iOS, Android и веб',
+          'Telegram Mini App',
+          'Кухонный экран (KDS)',
+          'Кассы Poster и iiko',
+        ],
+        stack: STACK.takeaway,
+        image: { ...IMAGES.takeaway, alt: 'Сайт takeAway — предзаказ в кофейнях рядом' },
+        stores: STORES.takeaway,
+      },
+      {
+        id: 'lunaclean',
+        name: 'Luna Clean',
+        kind: 'Для заказчика · выездная химчистка мебели',
+        url: 'https://lunaclean.ru/',
+        urlLabel: 'lunaclean.ru',
+        description:
+          'У компании не было сайта — сделал всё под ключ: лендинг с калькулятором цены и онлайн-записью на свободный слот, приложение без регистрации, админку со статистикой и Telegram-бота, который присылает заявки мастеру.',
+        highlights: [
+          'Калькулятор цены',
+          'Онлайн-запись',
+          'Приложение без входа',
+          'Telegram-бот мастеру',
+        ],
+        stack: STACK.lunaclean,
+        image: { ...IMAGES.lunaclean, alt: 'Лендинг Luna Clean — выездная химчистка мебели' },
+        stores: STORES.lunaclean,
       },
     ],
     clients: {
@@ -234,24 +261,17 @@ export const RU: SiteContent = {
         text: 'Яндекс Трекер, Figma и Swagger доступны агентам напрямую, дайджесты — в Telegram.',
       },
     ],
-    terminalTitle: 'claude — insapp-front',
+    terminalTitle: 'claude — fithorse',
     terminalNote: 'Пример сессии, упрощённо',
     terminal: [
-      { kind: 'cmd', text: 'claude "возьми INS-1024: лендинг нового партнёра ОСАГО"' },
-      {
-        kind: 'step',
-        tag: 'tracker',
-        text: 'задача разобрана → продукт, партнёр, apiKey, палитра',
-      },
-      { kind: 'step', tag: 'git', text: 'ветка feature/INS-1024 от develop' },
-      {
-        kind: 'step',
-        tag: 'builder',
-        text: 'landings/osago-partner · fileReplacements · stage в CI',
-      },
-      { kind: 'step', tag: 'build', text: 'ng build osago-partner → без ошибок' },
-      { kind: 'step', tag: 'qa', text: 'скриншоты desktop / mobile · консоль чистая' },
-      { kind: 'step', tag: 'tracker', text: 'комментарий · «Готово к тестированию» · тег QA' },
+      { kind: 'cmd', text: 'claude "добавь в FitHorse личные рекорды на 5 и 10 км"' },
+      { kind: 'step', tag: 'plan', text: 'задача разобрана → API, экран в приложении, тесты' },
+      { kind: 'step', tag: 'git', text: 'ветка feature/personal-records от main' },
+      { kind: 'step', tag: 'api', text: 'NestJS · GET /me/records · миграция Prisma' },
+      { kind: 'step', tag: 'app', text: 'Flutter · экран «Рекорды» · провайдер Riverpod' },
+      { kind: 'step', tag: 'test', text: 'jest + flutter test → всё зелёное' },
+      { kind: 'step', tag: 'qa', text: 'эмуляторы iOS / Android · скриншоты экрана' },
+      { kind: 'step', tag: 'pr', text: 'pull request · CI зелёный' },
       { kind: 'ok', text: 'готово — дальше ревью человеком' },
     ],
   },

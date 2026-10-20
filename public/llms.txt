@@ -28,7 +28,19 @@
 - TopBarber — https://topbarber.app — multi-tenant SaaS for barbershop booking: NestJS (Fastify), Prisma, PostgreSQL,
   Redis, BullMQ, Socket.IO, Angular, Telegram Bot API, Docker.
 - FitHorse — https://fithorse.ru — running / cycling / skiing app for iOS and Android: Flutter (Riverpod, drift),
-  NestJS 11, Prisma, PostgreSQL, Angular 22 admin (PWA).
+  NestJS 11, Prisma, PostgreSQL, Angular 22 admin (PWA). App Store: https://apps.apple.com/ru/app/fithorse/id6816748824,
+  Google Play: https://play.google.com/store/apps/details?id=com.fithorse.app
+- takeAway — https://takeaway.md — pre-order coffee and food, skip the queue: iOS and Android apps (Flutter), website and
+  Telegram Mini App (Angular 21), business dashboard and kitchen display, Poster and iiko POS integrations; NestJS 11,
+  Prisma, PostgreSQL, Redis, BullMQ, Socket.IO, Nx + pnpm monorepo. App Store: https://apps.apple.com/ru/app/id6816696544,
+  Google Play: https://play.google.com/store/apps/details?id=md.takeaway.app
+
+## Client projects
+
+- Luna Clean — https://lunaclean.ru — mobile upholstery cleaning, built end to end: landing page with a price calculator
+  and online booking (Vue 3 + Vite, prerendered), NestJS 11 + Prisma + PostgreSQL backend, Angular 22 admin with
+  statistics, Flutter app with no sign-up, Telegram bot for the cleaner. Google Play:
+  https://play.google.com/store/apps/details?id=ru.lunaclean.app
 
 ## Education
 

@@ -75,7 +75,7 @@
   color: var(--fg-muted);
 }
 
-// FitHorse also has an app screen: a phone leaning on the corner of the browser window.
+// Apps also show their screen: a phone leaning on the corner of the browser window.
 .phone {
   position: absolute;
   right: -10px;
@@ -97,121 +97,6 @@
     right: -4px;
     width: 26%;
     border-radius: 14px;
-  }
-}
-
-// "Svyaz" widget: the purchase flow, step by step.
-.widget {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 16 / 11.2;
-  border-radius: var(--radius);
-  background:
-    radial-gradient(120% 90% at 85% 0%, var(--accent-soft), transparent 60%), var(--bg-soft);
-  box-shadow: 0 0 0 1px var(--line);
-}
-
-.widget__card {
-  width: min(78%, 300px);
-  padding: 18px 20px 20px;
-  border-radius: 18px;
-  background: var(--surface);
-  box-shadow: var(--shadow);
-}
-
-.widget__title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  font-size: 0.9375rem;
-  font-weight: 600;
-}
-
-.widget__chip {
-  padding: 2px 8px;
-  border-radius: 6px;
-  background: var(--accent-soft);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  color: var(--accent);
-}
-
-.widget__steps {
-  position: relative;
-  display: grid;
-  gap: 10px;
-  margin-top: 14px;
-
-  // The rail between the nodes
-  &::before {
-    content: '';
-    position: absolute;
-    left: 11px;
-    top: 12px;
-    bottom: 12px;
-    width: 1px;
-    background: var(--line-strong);
-  }
-}
-
-.widget__step {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 0.875rem;
-  color: var(--fg-muted);
-}
-
-.widget__node {
-  display: grid;
-  place-items: center;
-  width: 23px;
-  height: 23px;
-  flex: none;
-  border: 1px solid var(--line-strong);
-  border-radius: 50%;
-  background: var(--surface);
-  font-size: 0.6875rem;
-  color: var(--fg-muted);
-
-  // The steps light up one after another, like an order going through.
-  @media (prefers-reduced-motion: no-preference) {
-    animation: node 6s var(--ease-out) infinite both;
-    animation-delay: calc(var(--s) * 0.7s);
-  }
-}
-
-.widget__step--done {
-  color: var(--fg);
-  font-weight: 500;
-
-  .widget__node {
-    border-color: var(--accent);
-    background: var(--accent);
-    color: var(--on-accent);
-  }
-}
-
-@keyframes node {
-  0%,
-  6% {
-    border-color: var(--line-strong);
-    background: var(--surface);
-    color: var(--fg-muted);
-  }
-  12%,
-  70% {
-    border-color: var(--accent);
-    background: var(--accent);
-    color: var(--on-accent);
-  }
-  80%,
-  100% {
-    border-color: var(--line-strong);
-    background: var(--surface);
-    color: var(--fg-muted);
   }
 }
 
@@ -265,8 +150,24 @@
   margin-top: 18px;
 }
 
-.site {
+// The live site and, for apps, the stores they are published in.
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
   margin-top: 18px;
+}
+
+// Both store buttons wrap to the next line together.
+.stores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.store {
+  gap: 7px;
 }
 
 // ---------- More client work ----------
