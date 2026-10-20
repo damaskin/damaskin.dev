@@ -144,6 +144,7 @@ export interface SiteContent {
     readonly title: string;
     readonly text: string;
     readonly email: string;
+    readonly phones: readonly Link[];
     readonly links: readonly Link[];
   };
   readonly footer: {

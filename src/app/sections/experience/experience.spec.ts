@@ -18,6 +18,8 @@ describe('career timeline', () => {
     // radikal.ru: Sep 2013 — Jul 2014 → starts 8 months in, 11 months long (of 168)
     expect(bar('radikal')).toMatchObject({ left: 4.76, width: 6.55, from: '2013', to: '2014' });
     expect(bar('dex')).toMatchObject({ from: '2015', to: '2017' });
+    // GLOBUS: Jul 2018 — Dec 2022 → 66 months in, 54 months long
+    expect(bar('globus')).toMatchObject({ left: 39.29, width: 32.14, from: '2018', to: '2022' });
   });
 
   it('stretches current jobs up to today', () => {
@@ -25,7 +27,6 @@ describe('career timeline', () => {
     expect(insapp.to).toBe('н. в.');
     // Dec 2021 + 59 months = Oct 2026, the build month
     expect(insapp.left + insapp.width).toBeCloseTo(((13 * 12 + 10) / 168) * 100, 1);
-    expect(bar('globus').left + bar('globus').width).toBeCloseTo(insapp.left + insapp.width, 1);
   });
 
   it('keeps every bar inside the axis', () => {

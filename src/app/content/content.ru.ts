@@ -1,4 +1,15 @@
-import { CV_PATH, EMAIL, GITHUB_URL, HH_URL, IMAGES, STACK, STORES } from './shared';
+import {
+  CV_PATH,
+  EMAIL,
+  GITHUB_URL,
+  HH_URL,
+  IMAGES,
+  PHONES,
+  STACK,
+  STORES,
+  TELEGRAM_URL,
+  WHATSAPP_URL,
+} from './shared';
 import { SiteContent } from './types';
 
 export const RU: SiteContent = {
@@ -95,7 +106,7 @@ export const RU: SiteContent = {
         company: 'GLOBUS',
         role: 'Frontend-разработчик',
         start: '2018-07',
-        end: null,
+        end: '2022-12',
         summary:
           'Разработка веб-сервисов и сайтов для заказчиков: от UX/UI-прототипа до продакшена.',
         points: [
@@ -348,7 +359,10 @@ export const RU: SiteContent = {
     title: 'Есть задача? Давайте обсудим.',
     text: 'Открыт к предложениям по fullstack- и frontend-разработке на Angular / Node.js. Москва, удалённо, готов к командировкам.',
     email: EMAIL,
+    phones: PHONES,
     links: [
+      { label: 'Telegram', href: TELEGRAM_URL },
+      { label: 'WhatsApp', href: WHATSAPP_URL },
       { label: 'GitHub', href: GITHUB_URL },
       { label: 'Резюме на hh.ru', href: HH_URL },
       { label: 'CV в PDF', href: CV_PATH },

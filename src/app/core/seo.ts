@@ -7,6 +7,7 @@ import {
   HH_URL,
   LANG_PATH,
   Lang,
+  PHONES,
   SITE_URL,
   SiteContent,
 } from '../content';
@@ -102,6 +103,7 @@ export class Seo {
       url,
       image,
       email: `mailto:${EMAIL}`,
+      telephone: PHONES.map((p) => p.label),
       sameAs: [GITHUB_URL, HH_URL],
       address: {
         '@type': 'PostalAddress',

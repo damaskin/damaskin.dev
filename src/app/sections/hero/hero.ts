@@ -74,7 +74,12 @@ export class Hero {
 
   /** On paper the buttons are gone, so the contacts go right under the lead. */
   protected readonly printContacts = computed(() =>
-    [this.content().contact.email, SITE_URL, GITHUB_URL]
+    [
+      this.content().contact.email,
+      ...this.content().contact.phones.map((p) => p.label),
+      SITE_URL,
+      GITHUB_URL,
+    ]
       .map((s) => s.replace('https://', ''))
       .join(' · '),
   );

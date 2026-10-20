@@ -8,6 +8,9 @@
 - Website (EN): https://damaskin.dev/en
 - CV (PDF, RU): https://damaskin.dev/cv/Ivan_Damaskin_CV.pdf
 - Email: damaskin@live.ru
+- Phone: +7 905 505-80-58, +373 68 257 345
+- Telegram: https://t.me/+37368257345
+- WhatsApp: https://wa.me/37368257345
 - GitHub: https://github.com/damaskin
 - hh.ru: https://hh.ru/resume/7106d07eff020e80d60039ed1f684d71313168
 
@@ -18,7 +21,7 @@
   corporate site); 180+ branded partner landings on one codebase (fileReplacements, GitLab CI stage per landing);
   migration Angular 11/15 → 20–22; corporate site on Angular SSR + Payload CMS; white-label eSIM widget “Svyaz”;
   Claude Code agents for task triage, landing generation, code review and visual QA, MCP for Tracker, Figma, Swagger.
-- GLOBUS — Frontend Developer, Jul 2018 – now. Client work from UX/UI prototype to production: Chemexsol (oil & gas
+- GLOBUS — Frontend Developer, Jul 2018 – Dec 2022. Client work from UX/UI prototype to production: Chemexsol (oil & gas
   online system), Yandex Delivery (site for international markets), Trullo (project management SPA).
 - DEX technology — Frontend Developer, Feb 2015 – Jun 2017. SPAs, responsive layouts, REST API (AngularJS, jQuery).
 - radikal.ru — Frontend Developer, Sep 2013 – Jul 2014. Markup and client-side JavaScript for a photo hosting service.

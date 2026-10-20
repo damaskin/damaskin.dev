@@ -52,6 +52,10 @@ describe('periods', () => {
       range: 'Сен 2013 — Июл 2014',
       duration: '11 мес.',
     });
+    expect(formatPeriod(job('globus'), ru, now)).toEqual({
+      range: 'Июл 2018 — Дек 2022',
+      duration: '4 г. 6 мес.',
+    });
     expect(formatPeriod(job('dex'), en, now).duration).toBe('2 yrs 5 mo');
   });
 

@@ -52,6 +52,14 @@ import { SiteContent } from '../../content';
           <span class="mail__toast mono" role="status">{{ copied() ? c.a11y.copied : '' }}</span>
         </div>
 
+        <ul class="phones">
+          @for (phone of k.phones; track phone.href) {
+            <li>
+              <a class="phones__link" [href]="phone.href">{{ phone.label }}</a>
+            </li>
+          }
+        </ul>
+
         <ul class="links">
           @for (link of k.links; track link.href) {
             <li>
@@ -149,6 +157,32 @@ import { SiteContent } from '../../content';
       color: var(--ok);
     }
 
+    .phones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 28px;
+      margin-top: 18px;
+    }
+
+    .phones__link {
+      font-size: clamp(1.125rem, 0.95rem + 0.9vw, 1.625rem);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-decoration-color: var(--line-strong);
+      text-underline-offset: 0.2em;
+      transition:
+        color 0.2s,
+        text-decoration-color 0.2s;
+
+      &:hover {
+        color: var(--accent);
+        text-decoration-color: currentColor;
+      }
+    }
+
     .links {
       display: flex;
       flex-wrap: wrap;
@@ -159,6 +193,15 @@ import { SiteContent } from '../../content';
     @media print {
       .mail__link {
         font-size: 16pt;
+      }
+
+      .phones {
+        gap: 2pt 14pt;
+        margin-top: 4pt;
+      }
+
+      .phones__link {
+        font-size: 11pt;
       }
 
       .links {

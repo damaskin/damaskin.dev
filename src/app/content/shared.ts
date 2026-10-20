@@ -3,6 +3,13 @@ import { StoreLink } from './types';
 /** Facts that do not depend on the language. */
 export const SITE_URL = 'https://damaskin.dev';
 export const EMAIL = 'damaskin@live.ru';
+export const PHONES = [
+  { label: '+7 905 505-80-58', href: 'tel:+79055058058' },
+  { label: '+373 68 257 345', href: 'tel:+37368257345' },
+] as const;
+/** Both messengers are on the Moldovan number. */
+export const TELEGRAM_URL = 'https://t.me/+37368257345';
+export const WHATSAPP_URL = 'https://wa.me/37368257345';
 export const GITHUB_URL = 'https://github.com/damaskin';
 export const HH_URL = 'https://hh.ru/resume/7106d07eff020e80d60039ed1f684d71313168';
 export const SOURCE_URL = 'https://github.com/damaskin/damaskin.dev';

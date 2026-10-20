@@ -1,0 +1,466 @@
+<!doctype html>
+<!-- The CV served at /cv/Ivan_Damaskin_CV.pdf (A4, 2 pages). Keep it in step with src/app/content/content.ru.ts.
+     Rendered with any headless Chrome, e.g.:
+     chrome --headless=new --no-pdf-header-footer --print-to-pdf=public/cv/Ivan_Damaskin_CV.pdf \
+       "file:///…/scripts/cv/cv.html"                                                                -->
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <title>Иван Дамаскин — Fullstack-разработчик</title>
+    <meta name="author" content="Иван Дамаскин" />
+    <style>
+      :root {
+        --ink: #1b1f24;
+        --muted: #5b6470;
+        --faint: #8a929c;
+        --rule: #d9dee4;
+        --accent: #1d4ed8;
+        --accent-soft: #eef3ff;
+      }
+
+      @page {
+        size: A4;
+        margin: 13mm 15mm 13mm;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        font-size: 9.3pt;
+        line-height: 1.42;
+        color: var(--ink);
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      p {
+        margin: 0;
+      }
+      strong {
+        font-weight: 600;
+      }
+
+      /* Header */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 10mm;
+      }
+      h1 {
+        font-size: 23pt;
+        line-height: 1.05;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0;
+      }
+      .role {
+        margin-top: 2.5pt;
+        font-size: 11pt;
+        font-weight: 600;
+        color: var(--accent);
+      }
+      .tagline {
+        margin-top: 1.5pt;
+        font-size: 9pt;
+        color: var(--muted);
+      }
+      .contacts {
+        text-align: right;
+        font-size: 8.6pt;
+        line-height: 1.55;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .contacts b {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      /* Highlights */
+      .facts {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        margin-top: 9pt;
+        border-top: 1.5pt solid var(--ink);
+        border-bottom: 0.6pt solid var(--rule);
+      }
+      .fact {
+        padding: 6pt 8pt 6pt 0;
+      }
+      .fact + .fact {
+        padding-left: 8pt;
+        border-left: 0.6pt solid var(--rule);
+      }
+      .fact .n {
+        font-size: 13.5pt;
+        font-weight: 700;
+        color: var(--accent);
+        letter-spacing: -0.01em;
+        line-height: 1.15;
+      }
+      .fact .t {
+        font-size: 7.8pt;
+        color: var(--muted);
+        line-height: 1.3;
+      }
+
+      /* Sections */
+      section {
+        margin-top: 11pt;
+      }
+      h2 {
+        font-size: 8.4pt;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin: 0 0 5pt;
+        padding-bottom: 3pt;
+        border-bottom: 0.6pt solid var(--rule);
+        break-after: avoid;
+      }
+
+      .summary p {
+        font-size: 9.5pt;
+        line-height: 1.5;
+      }
+
+      /* Skills */
+      .skills {
+        display: grid;
+        grid-template-columns: 27mm 1fr;
+        row-gap: 3pt;
+        column-gap: 4mm;
+      }
+      .skills dt {
+        font-weight: 600;
+      }
+      .skills dd {
+        margin: 0;
+        color: #2b313a;
+      }
+
+      /* Jobs & projects */
+      .item {
+        margin-top: 8pt;
+      }
+      .item:first-of-type {
+        margin-top: 2pt;
+      }
+      .item-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 6mm;
+        break-after: avoid;
+      }
+      .item-title {
+        font-size: 10.6pt;
+        font-weight: 700;
+      }
+      .item-title .pos {
+        font-weight: 400;
+        color: var(--muted);
+      }
+      .item-title .sep {
+        color: var(--faint);
+        font-weight: 400;
+        margin: 0 3pt;
+      }
+      .dates {
+        font-size: 8.6pt;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .about {
+        margin-top: 1.5pt;
+        color: var(--muted);
+        font-size: 8.9pt;
+        break-after: avoid;
+      }
+      ul {
+        margin: 4pt 0 0;
+        padding: 0;
+        list-style: none;
+      }
+      li {
+        padding-left: 10pt;
+        text-indent: -10pt;
+        margin-top: 2.6pt;
+        break-inside: avoid;
+      }
+      li::before {
+        content: '';
+        display: inline-block;
+        vertical-align: 0.18em;
+        width: 3.6pt;
+        height: 3.6pt;
+        margin: 0 6.4pt 0 0;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+      .stack {
+        margin-top: 4pt;
+        font-size: 8.5pt;
+        color: var(--muted);
+      }
+      .stack b {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .compact .about {
+        color: var(--ink);
+        font-size: 9.3pt;
+      }
+      .keep {
+        break-inside: avoid;
+      }
+
+      .edu {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 6mm;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>Иван Дамаскин</h1>
+        <div class="role">Fullstack-разработчик · Angular / Node.js</div>
+        <div class="tagline">AI-assisted development: Claude Code, AI-агенты, MCP, LLM API</div>
+      </div>
+      <div class="contacts">
+        <a href="tel:+79055058058"><b>+7 905 505-80-58</b></a> ·
+        <a href="mailto:damaskin@live.ru"><b>damaskin@live.ru</b></a
+        ><br />
+        <a href="tel:+37368257345"><b>+373 68 257 345</b></a> —
+        <a href="https://t.me/+37368257345">Telegram</a>,
+        <a href="https://wa.me/37368257345">WhatsApp</a><br />
+        <a href="https://github.com/damaskin">github.com/damaskin</a> ·
+        <a href="https://hh.ru/resume/7106d07eff020e80d60039ed1f684d71313168">Резюме на hh.ru</a
+        ><br />
+        Москва · удалённо · готов к командировкам
+      </div>
+    </header>
+
+    <div class="facts">
+      <div class="fact">
+        <div class="n">11+ лет</div>
+        <div class="t">в коммерческой веб-разработке</div>
+      </div>
+      <div class="fact">
+        <div class="n">8 продуктов</div>
+        <div class="t">фронтенд insurtech-платформы INSAPP</div>
+      </div>
+      <div class="fact">
+        <div class="n">180+</div>
+        <div class="t">партнёрских лендингов и виджетов</div>
+      </div>
+      <div class="fact">
+        <div class="n">Angular 11 → 22</div>
+        <div class="t">миграция продуктовой линейки</div>
+      </div>
+    </div>
+
+    <section class="summary">
+      <h2>О себе</h2>
+      <p>
+        Fullstack-разработчик с 11+ годами коммерческого опыта. Почти пять лет развиваю фронтенд
+        insurtech-платформы INSAPP: 8&nbsp;продуктов для банков и маркетплейсов, 180+ брендированных
+        лендингов и встраиваемых виджетов. Основной стек — Angular&nbsp;20–22 и TypeScript, на
+        бэкенде — Node.js / NestJS, PostgreSQL, Redis; мобильные приложения пишу на Flutter и React
+        Native. Внедряю AI-ассистированную разработку: агенты на Claude Code, MCP-интеграции, LLM
+        API в продуктах.
+      </p>
+    </section>
+
+    <section>
+      <h2>Ключевые навыки</h2>
+      <dl class="skills">
+        <dt>Frontend</dt>
+        <dd>
+          Angular 20–22 (standalone, Signals, SSR), TypeScript, RxJS, JavaScript, HTML5, CSS3 /
+          SCSS, Tailwind CSS, React
+        </dd>
+        <dt>Backend</dt>
+        <dd>
+          Node.js, NestJS, PostgreSQL, Prisma, Redis, BullMQ, REST API, WebSocket (Socket.IO),
+          Swagger / OpenAPI
+        </dd>
+        <dt>Mobile</dt>
+        <dd>Flutter (Riverpod), React Native (Expo)</dd>
+        <dt>AI</dt>
+        <dd>
+          Claude Code, Cursor, Codex, AI-агенты, MCP, Prompt engineering, OpenAI API, Gemini API
+        </dd>
+        <dt>DevOps / QA</dt>
+        <dd>Git, GitLab CI, Docker, Vitest, Jest, Karma / Jasmine, Sentry</dd>
+        <dt>Интеграции</dt>
+        <dd>Telegram Bot API и Mini Apps, Firebase, Stripe, Figma</dd>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Опыт работы</h2>
+
+      <div class="item">
+        <div class="item-head">
+          <div class="item-title">
+            INSAPP<span class="sep">·</span><span class="pos">Frontend-разработчик</span>
+          </div>
+          <div class="dates">Дек 2021 — н. в. · 4 г. 11 мес.</div>
+        </div>
+        <p class="about">
+          Insurtech-платформа: страховые и финансовые продукты, которые банки, маркетплейсы и
+          сервисы встраивают к себе в виде лендингов и виджетов.
+        </p>
+        <ul>
+          <li>
+            Разрабатываю и сопровождаю фронтенд <strong>8 продуктов</strong>: ОСАГО, КАСКО,
+            страхование ипотеки, МФО / финансовая витрина, подписки с кэшбэком в webview
+            Альфа-Банка, афиша, АРМ сотрудников, корпоративный сайт.
+          </li>
+          <li>
+            Поддерживаю <strong>180+ брендированных лендингов и виджетов</strong> партнёров на
+            единой кодовой базе: партнёрская специфика через fileReplacements, отдельный stage в
+            GitLab CI на каждый лендинг.
+          </li>
+          <li>
+            Перевёл продуктовую линейку с <strong>Angular 11/15 на 20–22</strong>:
+            standalone-компоненты, Signals, новый control flow, замена устаревших библиотек;
+            legacy-фронт выведен из эксплуатации.
+          </li>
+          <li>
+            Перенёс корпоративный сайт на <strong>Angular SSR + Payload CMS</strong> (PostgreSQL):
+            100+ статей блога с сохранением URL, публикация без пересборки.
+          </li>
+          <li>
+            Собрал <strong>white-label виджет «Связь»</strong> для банковских приложений: продажа
+            номеров с eSIM от каталога до подписания договора через Госуслуги / Госключ; путь
+            подтверждён партнёром на живых заказах.
+          </li>
+          <li>
+            Внедрил <strong>AI-ассистированную разработку</strong>: агенты на Claude Code для
+            разбора задач из Яндекс Трекера, сборки лендингов под ключ, код-ревью и визуального QA;
+            MCP-интеграции с Трекером, Figma и Swagger; дайджесты по задачам в Telegram.
+          </li>
+        </ul>
+        <p class="stack">
+          <b>Стек:</b> Angular 20–22, TypeScript, RxJS, Signals, SSR, SCSS, Vitest, Karma / Jasmine,
+          GitLab CI, Docker, PostgreSQL, Payload CMS, Claude Code, MCP
+        </p>
+      </div>
+
+      <div class="item keep">
+        <div class="item-head">
+          <div class="item-title">
+            GLOBUS<span class="sep">·</span><span class="pos">Frontend-разработчик</span>
+          </div>
+          <div class="dates">Июл 2018 — Дек 2022 · 4 г. 6 мес.</div>
+        </div>
+        <p class="about">
+          Разработка веб-сервисов и сайтов для заказчиков: от UX/UI-прототипа до продакшена.
+        </p>
+        <ul>
+          <li>
+            <strong>Chemexsol</strong> — цифровая онлайн-система для нефтегазовой отрасли:
+            UX/UI-дизайн и фронтенд веб-приложения.
+          </li>
+          <li><strong>Яндекс Доставка</strong> — сайт сервиса для зарубежных стран.</li>
+          <li><strong>Trullo</strong> — SPA-платформа для управления проектами.</li>
+        </ul>
+        <p class="stack">
+          <b>Стек:</b> Angular, TypeScript, JavaScript, HTML5, CSS3, REST API, Figma
+        </p>
+      </div>
+
+      <div class="item keep compact">
+        <div class="item-head">
+          <div class="item-title">
+            DEX technology<span class="sep">·</span><span class="pos">Frontend-разработчик</span>
+          </div>
+          <div class="dates">Фев 2015 — Июн 2017 · 2 г. 5 мес.</div>
+        </div>
+        <p class="about">
+          Разработка клиентской части веб-проектов: SPA, адаптивная вёрстка, интеграция с REST API.
+        </p>
+        <p class="stack">
+          <b>Стек:</b> JavaScript, AngularJS, jQuery, HTML5, CSS3, Less, Bootstrap
+        </p>
+      </div>
+
+      <div class="item keep compact">
+        <div class="item-head">
+          <div class="item-title">
+            radikal.ru<span class="sep">·</span><span class="pos">Frontend-разработчик</span>
+          </div>
+          <div class="dates">Сен 2013 — Июл 2014 · 11 мес.</div>
+        </div>
+        <p class="about">Вёрстка и клиентский JavaScript для фотохостинга.</p>
+        <p class="stack"><b>Стек:</b> JavaScript, jQuery, jQuery Mobile, HTML5, CSS</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Собственные проекты</h2>
+
+      <div class="item keep">
+        <div class="item-head">
+          <div class="item-title">
+            TopBarber<span class="sep">·</span
+            ><span class="pos">SaaS онлайн-записи для барбершопов</span>
+          </div>
+          <div class="dates"><a href="https://topbarber.app">topbarber.app</a></div>
+        </div>
+        <p class="about">
+          Мультитенантная платформа: публичная страница записи на поддомене бизнеса, админка,
+          Telegram-боты, подписки и платежи. Перенёс данные с Firestore на PostgreSQL.
+        </p>
+        <p class="stack">
+          <b>Стек:</b> NestJS (Fastify), Prisma, PostgreSQL, Redis, BullMQ, Socket.IO, Angular,
+          Telegram Bot API, Docker
+        </p>
+      </div>
+
+      <div class="item keep">
+        <div class="item-head">
+          <div class="item-title">
+            FitHorse<span class="sep">·</span
+            ><span class="pos">приложение для бега, велозаездов и лыж</span>
+          </div>
+          <div class="dates"><a href="https://fithorse.ru">fithorse.ru</a></div>
+        </div>
+        <p class="about">
+          Мобильное приложение для iOS и Android: GPS-трекинг, карты, BLE-датчики, Apple Health /
+          Health Connect, друзья и совместные тренировки. Свой бэкенд и веб-админка.
+        </p>
+        <p class="stack">
+          <b>Стек:</b> Flutter (Riverpod, drift), NestJS 11, Prisma, PostgreSQL, Angular 22
+          (админка, PWA)
+        </p>
+      </div>
+    </section>
+
+    <section class="keep">
+      <h2>Образование</h2>
+      <div class="edu">
+        <div>
+          <strong>Московский институт предпринимательства и права</strong> — Финансы и кредит,
+          высшее
+        </div>
+        <div class="dates">2014</div>
+      </div>
+    </section>
+  </body>
+</html>
